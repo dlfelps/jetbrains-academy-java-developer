@@ -1,21 +1,41 @@
 package machine;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class CoffeeMachine {
     public static void main(String[] args) {
 
-        System.out.println("Write how many cups of coffee you will need:");
         Scanner scanner = new Scanner(System.in);
 
-        int numCups = scanner.nextInt();
+        System.out.println("Write how ml of water the coffee machine has:");
+        int water = scanner.nextInt();
+        System.out.println("Write how ml of milk the coffee machine has:");
+        int milk = scanner.nextInt();
+        System.out.println("Write how grams of coffee beans the coffee machine has:");
+        int coffee = scanner.nextInt();
+        System.out.println("Write how many cups of coffee you will need:");
+        Integer numCups = scanner.nextInt();
 
-        String text = """
-                For %d cups of coffee you will need:
-                %d ml of water
-                %d ml of milk
-                %d g of coffee beans
-                """.formatted(numCups, 200*numCups, 50*numCups, 15*numCups);
-        System.out.println(text);
+        Integer numPossible = calculatePossible(water, milk, coffee);
+
+        switch (numCups.compareTo(numPossible)) {
+            case 1:
+                System.out.println("No, I can only make %d cup(s) of coffee".formatted(numPossible));
+                break;
+            case 0:
+                System.out.println("Yes, I can make that amount of coffee");
+                break;
+            case -1:
+                System.out.println("Yes, I can make that amount of coffee (and even %d more than that)".formatted(numPossible-numCups));
+                break;
+        }
+    }
+
+    private static int calculatePossible(int water, int milk, int coffee) {
+        Integer[] ingredients = {water/200, milk/50, coffee/15};
+        return Collections.min(Arrays.asList(ingredients));
+
     }
 }
