@@ -2,6 +2,7 @@ package machine;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 record CoffeeState(int water, int milk, int coffee, int cups, int money) {
@@ -35,9 +36,6 @@ record CoffeeState(int water, int milk, int coffee, int cups, int money) {
 
     }
 
-
-
-
     public static void printState(CoffeeState state) {
         String output = """
                 The coffee machine has:
@@ -59,49 +57,68 @@ public class CoffeeMachine {
         CoffeeState state = new CoffeeState(400, 540, 120, 9, 550);
         Scanner scanner = new Scanner(System.in);
 
-        String input;
+        String input = "";
+        String buyInput = "";
         Integer buyChoice;
 
-        CoffeeState.printState(state);
+        while (!input.equalsIgnoreCase("exit")){
+            System.out.println("Write action (buy, fill, take, remaining, exit):");
+            input = scanner.next();
 
-        System.out.println("Write action (buy, fill, take):");
-        input = scanner.next();
-        switch (input) {
-            case "buy":
-                System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
-                buyChoice = scanner.nextInt();
-                switch (buyChoice.compareTo(2)) {
-                    case 1: //cappuccino
-                        state = CoffeeState.buyCappuccino(state);
-                        break;
-                    case 0: // latte
-                        state = CoffeeState.buyLatte(state);
-                        break;
-                    case -1: //espresso
-                        state = CoffeeState.buyEspresso(state);
-                        break;
+            switch (input) {
+                case "buy" -> {
+                    System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+                    buyInput = scanner.next();
+                    if (!buyInput.equalsIgnoreCase("back")) {
+                        buyChoice = Integer.parseInt(buyInput);
+                        state = tryToBuy(state, buyChoice);
+                    }
                 }
-                break;
-            case "fill":
-                System.out.println("Write how many ml of water you want to add:");
-                state = CoffeeState.addWater(state, scanner.nextInt());
+                case "fill" -> {
+                    System.out.println("Write how many ml of water you want to add:");
+                    state = CoffeeState.addWater(state, scanner.nextInt());
 
-                System.out.println("Write how many ml of milk you want to add:");
-                state = CoffeeState.addMilk(state, scanner.nextInt());
+                    System.out.println("Write how many ml of milk you want to add:");
+                    state = CoffeeState.addMilk(state, scanner.nextInt());
 
-                System.out.println("Write how many grams of coffee you want to add:");
-                state = CoffeeState.addCoffee(state, scanner.nextInt());
+                    System.out.println("Write how many grams of coffee you want to add:");
+                    state = CoffeeState.addCoffee(state, scanner.nextInt());
 
-                System.out.println("Write how many disposable cups you want to add:");
-                state = CoffeeState.addCups(state, scanner.nextInt());
-                break;
-            case "take":
-                state = CoffeeState.takeMoney(state);
-                break;
+                    System.out.println("Write how many disposable cups you want to add:");
+                    state = CoffeeState.addCups(state, scanner.nextInt());
+                }
+                case "take" -> {
+                    state = CoffeeState.takeMoney(state);
+                }
+                case "remaining" -> CoffeeState.printState(state);
+            }
         }
-        CoffeeState.printState(state);
+
+
     }
 
+    private static CoffeeState buyCoffee(CoffeeState state, Integer buyChoice) {
+        return switch (buyChoice.compareTo(2)) {
+            case 1  ->  CoffeeState.buyCappuccino(state);//cappuccino
+            case 0  ->  CoffeeState.buyLatte(state);// latte
+            case -1 -> CoffeeState.buyEspresso(state);//espresso
+            default -> state;
+        };
+    }
+
+    private static CoffeeState tryToBuy(CoffeeState state, Integer buyChoice) {
+
+        var tryState = buyCoffee(state, buyChoice);
+        var minValue = Collections.min(List.of(tryState.water(),tryState.coffee(), tryState.milk(), tryState.cups()));
+
+        if (minValue < 0) {
+            System.out.println("Sorry, not enough water!");
+            tryState = state;
+        } else {
+            System.out.println("I have enough resources, making you a coffee!");
+        }
+        return tryState;
+    }
 
 
     private static int calculatePossible(int water, int milk, int coffee) {
