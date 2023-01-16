@@ -1,0 +1,28 @@
+<h5 id="description">Description</h5>
+<p>We are going to create a program that keeps track of the learning progress of multiple students. To accomplish this task, we should teach our program to read various data in string and numeric formats, do certain calculations, and output desired information. To begin with, we need to make our program interactive.</p>
+<p>Any program designed to interact with users should have a user interface. In our case, we will implement the command-line interface so that users can enter different commands and receive the corresponding responses. In addition, for the benefit of our users, we will make commands case-insensitive and keep our responses reasonably informative.</p>
+<p>These are our requirements, so let's get going!</p>
+<h5 id="objectives">Objectives</h5>
+<p>In this stage, your program should:</p>
+<ol>
+<li>Demonstrate that it is running by printing its title: <code class="java">Learning Progress Tracker</code>.</li>
+<li>Wait for the commands. In this stage, the only command the program should recognize is <code class="java">exit</code>. Once a user enters it, the program should print <code class="java">Bye!</code> and quit.</li>
+<li>Detect if a user has entered a blank line and print <code class="java">No input</code> in response.</li>
+<li>Print <code class="java">Unknown command!</code> if a user enters an unknown command.</li>
+</ol>
+<h5 id="examples">Examples</h5>
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+<p><strong>Example 1: </strong><em>an empty line and the exit</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; 
+No input.
+&gt; exit
+Bye!</code></pre>
+<p><strong>Example 2:</strong> <em>unknown commands and exit</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; quit
+Error: unknown command!
+&gt; help
+Error: unknown command!
+&gt; exit
+Bye!</code></pre>

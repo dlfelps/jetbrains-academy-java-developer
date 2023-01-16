@@ -1,0 +1,90 @@
+<h5 id="description">Description</h5>
+<p>Once we are sure that the input information is correct, let's add a few new features to the program. This time, we will add users to the data store and update their records as the new learning data becomes available.</p>
+<p>There will be some restrictions on adding students, though. First, you should assign a unique ID to each student so that you can access their records using the id rather than using their sensitive personal data. You may use a number or a string as an ID. Second, make sure that each user has only one account on the platform. Some users may have the same names, that's why you have their email addresses as their identity. This means that any email address can be used only once for registration.</p>
+<p>The learning platform offers four courses: Java, Data Structures and Algorithms (DSA), Databases, and Spring. Each student can take any (or all) of these courses, complete tasks, pass tests, and submit their homework to receive points. By completing any task of any course, a student earns credit points that will be added to the student's total course score. These points can be zero, but they can't be negative.</p>
+<p>Use the following input format to update records: a line of five elements separated by blank spaces. The first element is a student's ID, and the rest four elements are points earned by the student in the courses. For example:</p>
+<pre><code class="language-no-highlight">25841 4 10 5 0
+28405 0 8 7 5</code></pre>
+<p>Further, your program should be able to output information about the learning progress of any registered students. Keeping these conditions and restrictions in mind, don't forget to use unit tests to make sure your program works as intended.</p>
+<h5 id="objectives">Objectives</h5>
+<p>In addition to the features of the previous stages, your program should:</p>
+<ol>
+<li>Check if the provided email has been already used when adding information about students. If so, respond with the following message: <code class="java">This email is already taken.</code></li>
+<li>Recognize the new <code class="java">list</code> command to print the <code class="java">Students:</code> a header followed by the student IDs. The students must be listed in the order they were added. Remember, each ID must be unique. If there are no students to list, print <code class="java">No students found</code>.</li>
+<li>Recognize the new <code class="java">add points</code> and print the following message in response: <code class="java">Enter an id and points or 'back' to return</code>. After that, the program must read learning progress data in the following format: <code class="java">studentId number number number number</code>. The numbers correspond to the courses (Java, DSA, Databases, Spring). <code class="java">Number</code> is a non-negative integer number. If there is no student with the specified ID, the program should print <code class="java">No student is found for id=%s</code>. where <code class="java">%s</code> is the invalid ID. Also, if any of the numbers are missing, or there is an extra number or any of the numbers do not meet the requirements mentioned above, the program should print <code class="java">Incorrect points format</code>. If the learning progress data is entered in the correct format, and the specified user exists, the program should update the student's record and print <code class="java">Points updated</code>. Once <code class="java">back</code> is entered, the program must stop reading learning progress data.</li>
+<li>Recognize the <code class="java">find</code> command and print the following message: <code class="java">Enter an id or 'back' to return</code>. After that, if an ID is entered, the program should either print details of the student with the specified ID in this format: <code class="java">id points: Java=%d; DSA=%d; Databases=%d; Spring=%d</code>where <code class="java">%d</code> is the respective number of points earned by the student. If the ID cannot be found, print the error message: <code class="java">No student is found for id=%s</code>. where <code class="java">%s</code> is the invalid ID.</li>
+</ol>
+<h5 id="examples">Examples</h5>
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+<p><strong>Example 1:</strong><em> entering a non-unique email</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; add students
+Enter student credentials or 'back' to return
+&gt; John Doe johnd@yahoo.com
+The student has been added.
+&gt; Jane Spark jspark@gmail.com
+The student has been added.
+&gt; Jane Sprocket jspark@gmail.com
+This email is already taken.
+&gt; back
+Total 2 students have been added.
+&gt; exit
+Bye!</code></pre>
+<p><strong>Example 2:</strong><em> entering points in an incorrect format</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; add students
+Enter student credentials or 'back' to return:
+&gt; John Doe jdoe@yahoo.com
+The student has been added.
+&gt; Jane Spark janes@gmail.com
+The student has been added.
+&gt; back
+Total 2 students have been added.
+&gt; list
+Students:
+10000
+10001
+&gt; add points
+Enter an id and points or 'back' to return:
+&gt; 1000 10 10 5 8
+No student is found for id=1000.
+&gt; 10001 10 10 5 8
+Points updated.
+&gt; 10001 5 8 7 3
+Points updated.
+&gt; 10000 7 7 7 7 7
+Incorrect points format.
+&gt; 10000 -1 2 2 2
+Incorrect points format.
+&gt; 10000 ? 1 1 1
+Incorrect points format.
+&gt; back
+&gt; exit
+Bye!</code></pre>
+<p><strong>Example 3:</strong><em> entering points and printing information about a student</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; add students
+Enter student credentials or 'back' to return:
+&gt; John Doe jdoe@yahoo.com
+The student has been added.
+&gt; back
+Total 1 students have been added.
+&gt; list
+Students:
+10000
+&gt; add points
+Enter an id and points or 'back' to return:
+&gt; 10000 5 5 5 5
+Points updated.
+&gt; 10000 7 8 9 10
+Points updated.
+&gt; back
+&gt; find
+Enter an id or 'back' to return:
+&gt; 10000
+10000 points: Java=12; DSA=13; Databases=14; Spring=15
+&gt; 10001
+No student is found for id=10001.
+&gt; back
+&gt; exit
+Bye!</code></pre>

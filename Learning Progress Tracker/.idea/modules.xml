@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Learning_Progress_Tracker.iml" filepath="$PROJECT_DIR$/.idea/modules/Learning_Progress_Tracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.iml" filepath="$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Learning Progress Tracker/task/Learning_Progress_Tracker.Learning_Progress_Tracker-task.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Learning_Progress_Tracker.util.test.iml" />
+    </modules>
+  </component>
+</project>

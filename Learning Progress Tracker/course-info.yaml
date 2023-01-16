@@ -1,0 +1,16 @@
+type: hyperskill
+title: Learning Progress Tracker
+language: English
+summary: "<p>Online learning is gaining popularity. A good education platform\_can\
+  \ manage registrations, track learning progress, send notifications and newsletters\
+  \ to many users worldwide.\_It is a huge volume of work\_indeed. In this project,\
+  \ you will build an application that keeps\_track of the\_registered users, their\
+  \ learning progress, and metrics. It will also\_provide\_detailed information about\
+  \ each user or any category of users and the overall statistics for the entire learning\
+  \ platform.</p><br/><br/>Learn more at <a href=\"https://hyperskill.org/projects/197?utm_source=ide&utm_medium=ide&utm_campaign=ide&utm_content=project-card\"\
+  >https://hyperskill.org/projects/197</a>"
+programming_language: Java
+programming_language_version: 11
+content:
+- Learning Progress Tracker
+mode: Study

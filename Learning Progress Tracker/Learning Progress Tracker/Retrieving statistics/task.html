@@ -1,0 +1,121 @@
+<h5 id="description">Description</h5>
+<p>You have done a great job! As a reminder, our online learning platform offers its students four courses: Java, DSA, Databases, and Spring. To complete each of these courses, a student must earn a certain number of points that are different for each course: 600 for Java, 400 for DSA, 480 for Databases, and 550 for Spring. Students can enroll in any of the courses and take as many assignments as they want.</p>
+<p>It would be a good idea to know which course is the most popular, which is the hardest to beat, and so on. For this purpose, you need to add new features to your program: it must provide the statistics about each course and track the performance of each student in each course.</p>
+<p>Calculate the following:</p>
+<ul>
+<li>Find out which courses are the most and least popular ones. The most popular has the biggest number of enrolled students;</li>
+<li>Find out which course has the highest and lowest student activity. Higher student activity means a bigger number of completed tasks;</li>
+<li>Establish the easiest and hardest course. The easiest course has the highest average grade per assignment;</li>
+<li>Establish top learners for each course.</li>
+</ul>
+<p>A student is enrolled in the course if the learning progress data contains at least one non-zero submission for that course. See the following example:</p>
+<pre><code class="language-no-highlight">182365 4 0 0 8
+182365 0 0 0 5
+182366 0 8 0 4</code></pre>
+<p>On the first line, student <code class="java">182365</code> completed one Java task and earned 4 points and also completed one Spring task and earned 8 point. On the second line the same student completed one Spring task and was awarded 5 points. On the third line student <code class="java">182366 </code>completed one DSA task and received 8 points and one Spring task and got 4 points. In this example, the student <code class="java">182365</code> is considered to be enrolled in the Java and Spring courses, and the student <code class="java">182366</code> is considered to be enrolled in the DSA and Spring courses.</p>
+<p>One important thing. During statistics calculation, if multiple courses qualify for any of these categories, list the names of all such courses. If any course is already included in a category, it cannot be included in the opposite category. For example, if the Java Course is listed in the Highest Activity category, it cannot be listed in the Lowest Activity category.</p>
+<p>Look at the example above. The most popular course is Spring (2 enrolled students), the least popular course is Databases (0 enrolled students), the highest activity is Spring (3 submissions), the lowest activity is Databases (0 submissions), the easiest course is DSA (average score is 8), and the hardest course is Java (average score is 4):</p>
+<pre><code class="language-no-highlight">Type the name of a course to see details or 'back' to quit:
+Most popular: Spring
+Least popular: Databases
+Highest activity: Spring
+Lowest activity: Databases
+Easiest course: DSA
+Hardest course: Java</code></pre>
+<p>If no course falls into a certain category, for example if no students have enrolled in any of the courses or data can't be retrieved, print <code class="java">n/a</code>. See more examples in the Examples section below.</p>
+<p>Information about top learners should be presented as a list containing the following information: a student's ID, the total points for a course, and the course completion progress as a percentage:</p>
+<pre><code class="language-no-highlight">Java
+id     points completed
+125684 423    70.5%
+200751 420    70.0%
+130400 405    67.5%</code></pre>
+<p>The list must be sorted by the total number of points in descending order, and if two or more students have the same number of points, they must be sorted by their ID in ascending order. Use the dot <code class="java">.</code> character as the decimal point and <a href="https://docs.oracle.com/javase/7/docs/api/java/math/RoundingMode.html" rel="noopener noreferrer nofollow" target="_blank">RoundingMode.HALF_UP</a> for rounding decimal numbers.</p>
+<p>Also, use the following notation for course names: <code class="java">Java</code>, <code class="java">DSA</code>, <code class="java">Databases</code>, <code class="java">Spring</code>.</p>
+<p>This stage has a lot of requirements, so you can use unit tests to break things down.</p>
+<h5 id="objectives">Objectives</h5>
+<p>In addition to the features of the previous stages, your program should:</p>
+<ol>
+<li>Add a new command to your program's toolkit: <code class="java">statistics</code>. If users enter this command, your program should output the header: <code class="java">Type the name of a course to see details or 'back' to quit</code> and six lines with the following information: <code class="java">Most popular</code>, <code class="java">Least popular</code>, <code class="java">Highest activity</code>, <code class="java">Lowest activity</code>, <code class="java">Easiest course</code>, <code class="java">Hardest course</code> with the names of the corresponding courses. After that, if users enter a course name, the program should display the details of this course, but if users enter a name that doesn't correspond to any of the courses, the program should print <code class="java">Unknown course</code>. When the <code class="java">back</code> command is entered, the program goes back to other available commands.</li>
+<li>When users enter the <code class="java">statistics</code> command, your program must display the details about any course. When users type in the name of a course, the program should display the name of the course in the first line, then the column headers, and a list of student IDs, their total points in the respective course, and the percent of completion (one decimal place precision). If a course has no students, output only the name of the course and the column headers.</li>
+<li>Course details are available only after users enter <code class="java">statistics</code>, they should not be available with the <code class="java">back</code>. If users type in any course name before entering the <code class="java">statistics</code> command, the program must respond with the <code class="java">Unknown command!</code> message.</li>
+<li>Sort student lists by the total number of points in descending order and then by the ID in ascending order.</li>
+</ol>
+<h5 id="examples">Examples</h5>
+<p>The greater-than symbol followed by a space (<code class="java">&gt; </code>) represents the user input. Note that it's not part of the input.</p>
+<p><strong>Example 1:</strong><em> showing statistics with no data available</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; statistics
+Type the name of a course to see details or 'back' to quit:
+Most popular: n/a
+Least popular: n/a
+Highest activity: n/a
+Lowest activity: n/a
+Easiest course: n/a
+Hardest course: n/a
+&gt; java
+Java
+id	points	completed
+&gt; swing
+Unknown course.
+&gt; back
+&gt; exit
+Bye!</code></pre>
+<p><strong>Example 2:</strong><em> showing statistics</em></p>
+<pre><code class="language-no-highlight">Learning Progress Tracker
+&gt; add students
+Enter student credentials or 'back' to return:
+&gt; John Doe johnd@email.net
+The student has been added.
+&gt; Jane Spark jspark@yahoo.com
+The student has been added.
+&gt; back
+Total 2 students have been added.
+&gt; list
+Students:
+10000
+10001
+&gt; add points
+Enter an id and points or 'back' to return:
+&gt; 10000 8 7 7 5
+Points updated.
+&gt; 10000 7 6 9 7
+Points updated.
+&gt; 10000 6 5 5 0
+Points updated.
+&gt; 10001 8 0 8 6
+Points updated.
+&gt; 10001 7 0 0 0
+Points updated.
+&gt; 10001 9 0 0 5
+Points updated.
+&gt; back
+&gt; statistics
+Type the name of a course to see details or 'back' to quit:
+Most popular: Java, Databases, Spring
+Least popular: DSA
+Highest activity: Java
+Lowest activity: DSA
+Easiest course: Java
+Hardest course: Spring
+&gt; java
+Java
+id    points    completed
+10001 24        4.0%
+10000 21        3.5%
+&gt; dsa
+DSA
+id    points    completed
+10000 18        4.5%
+&gt; databases
+Databases
+id    points    completed
+10000 21        4.4%
+10001 8	        1.7%
+&gt; spring
+Spring
+id    points    completed
+10000 12        2.2%
+10001 11        2.0%
+&gt; back
+&gt; exit
+Bye!</code></pre>
