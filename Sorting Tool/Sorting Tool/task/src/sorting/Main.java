@@ -6,7 +6,8 @@ import java.util.*;
 enum DataType {
     WORD,
     LONG,
-    LINE;
+    LINE,
+    SORT;
 
     public static DataType from (String input) {
         return switch (input.toLowerCase()){
@@ -51,8 +52,8 @@ class LongParser extends Parser {
         var largest = Collections.max(tokens);
         var counter = tokens.stream().filter(number -> number == largest).count();
 
-        System.out.println(String.format("Total numbers: %d", tokens.size()));
-        System.out.println(String.format("The greatest number: %d (%d time(s), %.0f%%)", largest, counter, 100*(Long.valueOf(counter).floatValue())/tokens.size()));
+        System.out.printf("Total numbers: %d%n", tokens.size());
+        System.out.printf("The greatest number: %d (%d time(s), %.0f%%)%n", largest, counter, 100*(Long.valueOf(counter).floatValue())/tokens.size());
     }
 }
 
@@ -80,10 +81,10 @@ class LineParser extends Parser {
         var largest = Collections.max(tokens, Comparator.comparing(String::length));
         var counter = tokens.stream().filter(number -> number == largest).count();
 
-        System.out.println(String.format("Total lines: %d", tokens.size()));
+        System.out.printf("Total lines: %d%n", tokens.size());
         System.out.println("The longest line:");
         System.out.println(largest);
-        System.out.println(String.format("(%d time(s), %.0f%%)", counter, 100*Long.valueOf(counter).floatValue()/tokens.size()));
+        System.out.printf("(%d time(s), %.0f%%)%n", counter, 100*Long.valueOf(counter).floatValue()/tokens.size());
     }
 }
 
@@ -111,20 +112,59 @@ class WordParser extends Parser {
         var largest = Collections.max(tokens, Comparator.comparing(String::length));
         var counter = tokens.stream().filter(number -> number == largest).count();
 
-        System.out.println(String.format("Total words: %d", tokens.size()));
-        System.out.println(String.format("The longest word: %s (%d time(s), %.0f%%)", largest, counter, 100*Long.valueOf(counter).floatValue()/tokens.size()));
+        System.out.printf("Total words: %d%n", tokens.size());
+        System.out.printf("The longest word: %s (%d time(s), %.0f%%)%n", largest, counter, 100*Long.valueOf(counter).floatValue()/tokens.size());
+    }
+}
+
+class SortParser extends Parser {
+
+    ArrayList<Long> tokens;
+
+    public SortParser() {
+        tokens = new ArrayList<>();
+        parseInput();
+        printOutput();
+    }
+
+    public void parseInput(){
+        Scanner scanner = new Scanner(System.in);
+
+        while (scanner.hasNextLong()) {
+            long number = scanner.nextLong();
+            // write your code here
+            tokens.add(number);
+        }
+    }
+
+    public void printOutput(){
+        Collections.sort(tokens);
+        System.out.printf("Total numbers: %d%n", tokens.size());
+        System.out.print("Sorted data:");
+        tokens.forEach(token -> System.out.printf(" %d", token));
     }
 }
 
 public class Main {
     public static void main(final String[] args) {
 
-        var mode = DataType.from(args[1]);
+        DataType mode = null;
+
+        for (String input : args) {
+            if (input.equals("-sortIntegers")){
+                mode = DataType.SORT;
+            }
+        }
+
+        if (mode == null) {
+            mode = DataType.from(args[1]);
+        }
 
         switch (mode){
             case LONG -> new LongParser();
             case LINE -> new LineParser();
             case WORD -> new WordParser();
+            case SORT -> new SortParser();
         }
 
 
