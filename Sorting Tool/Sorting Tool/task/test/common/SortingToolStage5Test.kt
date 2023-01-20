@@ -6,18 +6,19 @@ import org.hyperskill.hstest.testcase.TestCase
 import org.hyperskill.hstest.testing.Settings
 import java.util.*
 
-class SortingToolStage4Test : StageTest<SortingToolClue>() {
+class SortingToolStage5Test : StageTest<SortingToolClue>() {
 
     init {
         Settings.allowOutOfInput = true
     }
 
     override fun generate(): List<TestCase<SortingToolClue>> {
-        return stage4Tests()
+        return stage4Tests() + stage5Tests()
     }
 
     override fun check(reply: String, clue: SortingToolClue): CheckResult {
         return when {
+            badArgs(clue.args) -> CheckResult(true)  // TODO: test something here
             "byCount" in clue.args -> checkByCount(reply, clue)
             else -> checkNatural(reply, clue)
         }
@@ -42,7 +43,66 @@ class SortingToolStage4Test : StageTest<SortingToolClue>() {
             else -> throw IllegalArgumentException("Bad test: no data type found")
         }
     }
+
+    private fun badArgs(args: List<String>): Boolean {
+        val unknownArgs =
+                args.toSet() - setOf("-dataType", "-sortingType", "long", "word", "line", "natural", "byCount")
+
+        if (unknownArgs.isNotEmpty()) {
+            return true
+        }
+
+        if (args.last() == "-dataType" || args.last() == "-sortingType") {
+            return true
+        }
+
+        return false
+    }
 }
+
+fun stage5Tests(): List<TestCase<SortingToolClue>> {
+    return listOf(
+            createTest(
+                    """
+                |1 -2   333 4
+                |42
+                |1                 1
+                """.trimMargin(),
+                    true,
+                    "-sortingType"
+            ),
+            createTest(
+                    """
+                |1 -2   333 4
+                |42
+                |1                 1
+                """.trimMargin(),
+                    true,
+                    "-sortingType", "byCount", "-dataType", "long", "-abc"
+            ),
+            createTest(
+                    """
+                |1111 1111
+                |22222
+                |3
+                |44
+                """.trimMargin(),
+                    false,
+                    "-sortingType", "byCount", "-dataType", "line", "-cde"
+            ),
+            createTest(
+                    """
+                |1111 1111
+                |22222
+                |3
+                |44
+                """.trimMargin(),
+                    false,
+                    "-dataType", "line", "-sortingType"
+            )
+    )
+}
+
 
 fun stage4Tests(): List<TestCase<SortingToolClue>> {
     return listOf(
@@ -124,7 +184,6 @@ fun stage4Tests(): List<TestCase<SortingToolClue>> {
             )
     )
 }
-
 
 
 fun revealRawTest(clue: SortingToolClue, reply: String): String {
@@ -339,5 +398,4 @@ fun <TokenType : Comparable<TokenType>> checkByCount(
 
     return CheckResult(true)
 }
-
 

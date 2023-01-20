@@ -1,13 +1,32 @@
 package sorting;
 
-import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+record MyCounter<T extends Comparable<T>>( T key, Long count, Integer total) implements Comparable<MyCounter<T>> {
+
+    @Override
+    public int compareTo(@NotNull MyCounter<T> c) {
+        var comp = this.count.compareTo(c.count);
+        if (comp != 0){
+            return comp;
+        } else {
+            return this.key.compareTo(c.key);
+        }
+    }
+
+    public void printMe(){
+        System.out.printf("%s: (%d time(s), %.0f%%)%n", key, count, 100*count.floatValue()/total);
+    }
+}
 
 enum DataType {
     WORD,
     LONG,
-    LINE,
-    SORT;
+    LINE;
 
     public static DataType from (String input) {
         return switch (input.toLowerCase()){
@@ -19,23 +38,52 @@ enum DataType {
     }
 }
 
-abstract class Parser {
+enum SortingType {
+    NATURAL,
+    BYCOUNT;
 
-    ArrayList<Object> tokens;
-
-    abstract void parseInput(); // fills tokens
-    abstract void printOutput(); //prints output
-
+    public static SortingType from (String input) {
+        return switch (input.toLowerCase()){
+            case "natural" -> NATURAL;
+            case "bycount" -> BYCOUNT;
+            default -> throw new IllegalArgumentException("Not a valid datatype");
+        };
+    }
 }
 
-class LongParser extends Parser {
-
+class LongParser  {
     ArrayList<Long> tokens;
 
-    public LongParser() {
+    public LongParser(SortingType order) {
         tokens = new ArrayList<>();
         parseInput();
-        printOutput();
+        switch (order){
+            case NATURAL -> printNatural();
+            case BYCOUNT -> printByCount();
+        }
+    }
+
+    private void printByCount() {
+        System.out.printf("Total numbers: %d%n", tokens.size());
+
+        // create a Map<String, Integer> that maps words to counts
+        Map<Long, Long> wordCounts = tokens.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // order by occurrence
+        wordCounts.entrySet().stream()
+                .map(entry -> new MyCounter<Long>(entry.getKey(), entry.getValue(), tokens.size()))
+                .sorted()
+                .forEach(MyCounter<Long>::printMe);
+
+    }
+
+    private void printNatural() {
+        System.out.printf("Total numbers: %d%n", tokens.size());
+        System.out.print("Sorted data:");
+        tokens.stream()
+                .sorted()
+                .forEach(word -> System.out.printf(" %s", word));
     }
 
     public void parseInput(){
@@ -47,24 +95,41 @@ class LongParser extends Parser {
             tokens.add(number);
         }
     }
-
-    public void printOutput(){
-        var largest = Collections.max(tokens);
-        var counter = tokens.stream().filter(number -> number == largest).count();
-
-        System.out.printf("Total numbers: %d%n", tokens.size());
-        System.out.printf("The greatest number: %d (%d time(s), %.0f%%)%n", largest, counter, 100*(Long.valueOf(counter).floatValue())/tokens.size());
-    }
 }
 
-class LineParser extends Parser {
-
+class LineParser  {
     ArrayList<String> tokens;
 
-    public LineParser() {
+    public LineParser(SortingType order) {
         tokens = new ArrayList<>();
         parseInput();
-        printOutput();
+        switch (order){
+            case NATURAL -> printNatural();
+            case BYCOUNT -> printByCount();
+        }
+    }
+
+    private void printByCount() {
+        System.out.printf("Total lines: %d%n", tokens.size());
+
+        // create a Map<String, Integer> that maps words to counts
+        Map<String, Long> wordCounts = tokens.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // order by occurrence
+        wordCounts.entrySet().stream()
+                .map(entry -> new MyCounter<String>(entry.getKey(), entry.getValue(), tokens.size()))
+                .sorted()
+                .forEach(MyCounter<String>::printMe);
+
+    }
+
+    private void printNatural() {
+        System.out.printf("Total lines: %d%n", tokens.size());
+        System.out.print("Sorted data:");
+        tokens.stream()
+                .sorted()
+                .forEach(word -> System.out.printf("%s%n", word));
     }
 
     public void parseInput(){
@@ -76,26 +141,41 @@ class LineParser extends Parser {
             tokens.add(next);
         }
     }
-
-    public void printOutput(){
-        var largest = Collections.max(tokens, Comparator.comparing(String::length));
-        var counter = tokens.stream().filter(number -> number == largest).count();
-
-        System.out.printf("Total lines: %d%n", tokens.size());
-        System.out.println("The longest line:");
-        System.out.println(largest);
-        System.out.printf("(%d time(s), %.0f%%)%n", counter, 100*Long.valueOf(counter).floatValue()/tokens.size());
-    }
 }
 
-class WordParser extends Parser {
-
+class WordParser  {
     ArrayList<String> tokens;
 
-    public WordParser() {
+    public WordParser(SortingType order) {
         tokens = new ArrayList<>();
         parseInput();
-        printOutput();
+        switch (order){
+            case NATURAL -> printNatural();
+            case BYCOUNT -> printByCount();
+        }
+    }
+
+    private void printByCount() {
+        System.out.printf("Total words: %d%n", tokens.size());
+
+        // create a Map<String, Integer> that maps words to counts
+        Map<String, Long> wordCounts = tokens.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // order by occurrence
+        wordCounts.entrySet().stream()
+                .map(entry -> new MyCounter<String>(entry.getKey(), entry.getValue(), tokens.size()))
+                .sorted()
+                .forEach(MyCounter<String>::printMe);
+
+    }
+
+    private void printNatural() {
+        System.out.printf("Total words: %d%n", tokens.size());
+        System.out.print("Sorted data:");
+        tokens.stream()
+                .sorted()
+                .forEach(word -> System.out.printf(" %s", word));
     }
 
     public void parseInput(){
@@ -107,66 +187,32 @@ class WordParser extends Parser {
             tokens.add(next);
         }
     }
-
-    public void printOutput(){
-        var largest = Collections.max(tokens, Comparator.comparing(String::length));
-        var counter = tokens.stream().filter(number -> number == largest).count();
-
-        System.out.printf("Total words: %d%n", tokens.size());
-        System.out.printf("The longest word: %s (%d time(s), %.0f%%)%n", largest, counter, 100*Long.valueOf(counter).floatValue()/tokens.size());
-    }
 }
 
-class SortParser extends Parser {
-
-    ArrayList<Long> tokens;
-
-    public SortParser() {
-        tokens = new ArrayList<>();
-        parseInput();
-        printOutput();
-    }
-
-    public void parseInput(){
-        Scanner scanner = new Scanner(System.in);
-
-        while (scanner.hasNextLong()) {
-            long number = scanner.nextLong();
-            // write your code here
-            tokens.add(number);
-        }
-    }
-
-    public void printOutput(){
-        Collections.sort(tokens);
-        System.out.printf("Total numbers: %d%n", tokens.size());
-        System.out.print("Sorted data:");
-        tokens.forEach(token -> System.out.printf(" %d", token));
-    }
-}
 
 public class Main {
     public static void main(final String[] args) {
 
         DataType mode = null;
+        SortingType order = null;
 
-        for (String input : args) {
-            if (input.equals("-sortIntegers")){
-                mode = DataType.SORT;
+        if (args.length == 2){ // -sortingType is natural if not specified
+            order = SortingType.NATURAL;
+            mode = DataType.from(args[1]);
+        } else { // length is 4
+            if (args[0].equals("-sortingType")){ // sortingType then dataType
+                order = SortingType.from(args[1]);
+                mode = DataType.from(args[3]);
+            } else { //dataType then sortingType
+                order = SortingType.from(args[3]);
+                mode = DataType.from(args[1]);
             }
         }
 
-        if (mode == null) {
-            mode = DataType.from(args[1]);
-        }
-
         switch (mode){
-            case LONG -> new LongParser();
-            case LINE -> new LineParser();
-            case WORD -> new WordParser();
-            case SORT -> new SortParser();
+            case LONG -> new LongParser(order);
+            case LINE -> new LineParser(order);
+            case WORD -> new WordParser(order);
         }
-
-
     }
 }
