@@ -503,5 +503,29 @@ files:
 
   learner_created: false
 feedback_link: https://hyperskill.org/projects/45/stages/244/implement#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #2
+
+    Can&#39;t parse your output: expected 2 lines.
+    Args:
+    -dataType long
+    Input:
+    1 -2   333 4
+    42
+    1                 1
+    Your output:
+
+    Please find below the output of your program during this failed test.
+    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
+
+    ---
+
+    Arguments: -dataType long
+
+    &gt; 1 -2   333 4
+    &gt; 42
+    &gt; 1                 1
+  time: "Mon, 23 Jan 2023 10:53:35 UTC"
 record: -1
