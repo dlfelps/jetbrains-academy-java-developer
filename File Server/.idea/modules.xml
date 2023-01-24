@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/File_Server.iml" filepath="$PROJECT_DIR$/.idea/modules/File_Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.iml" filepath="$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/File Server/task/File_Server.File_Server-task.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/File_Server.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/File_Server.util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/File_Server.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/File_Server.util.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/File_Server.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/File_Server.util.test.iml" />
+    </modules>
+  </component>
+</project>

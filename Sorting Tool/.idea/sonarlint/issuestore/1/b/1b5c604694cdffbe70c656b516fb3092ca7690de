@@ -1,0 +1,45 @@
+
+c
+java:S1192v"MDefine a constant instead of duplicating this literal "Sorted data:" 3 times.(ø¨¶Ò
+b
+java:S1192a"LDefine a constant instead of duplicating this literal "IOException" 3 times.(ıìç
+h
+java:S1192¹"LDefine a constant instead of duplicating this literal "-outputFile" 4 times.(”åĞ¯ÿÿÿÿÿ
+d
+java:S1192­"MDefine a constant instead of duplicating this literal "-sortingType" 4 times.(Œó­µ
+b
+java:S1192³"KDefine a constant instead of duplicating this literal "-inputFile" 4 times.(¸ŒåŠ
+f
+java:S1192©"JDefine a constant instead of duplicating this literal "-dataType" 3 times.(Š—ñèıÿÿÿÿ
+`
+java:S1301S"KReplace this "switch" statement by "if" statements to increase readability.(’€€f
+a
+java:S1301•"KReplace this "switch" statement by "if" statements to increase readability.(’€€f
+a
+java:S1301Ñ"KReplace this "switch" statement by "if" statements to increase readability.(’€€f
+l
+java:S3655‹"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(×ÇÜİıÿÿÿÿ
+g
+java:S3655Œ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ë’ÈÀ
+g
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(§ÜÄ•
+g
+java:S3655Š"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÅåŒÔ
+‚
+java:S1130e"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(äÉ°Æ
+‚
+java:S1130t"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(Ÿ¾‰
+;
+java:S3457v"%String contains no format specifiers.(ø¨¶Ò
+ƒ
+java:S1130¦"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(äÉ°Æ
+ƒ
+java:S1130µ"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(Ÿ¾‰
+<
+java:S3457·"%String contains no format specifiers.(ø¨¶Ò
+ƒ
+java:S1130â"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(äÉ°Æ
+ƒ
+java:S1130ñ"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(Ÿ¾‰
+<
+java:S3457ó"%String contains no format specifiers.(ø¨¶Ò

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -11,12 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task/build/classes/kotlin" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task/build/reports/tests" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task/build/test-results" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task/build/tmp" />
-            <option value="$PROJECT_DIR$/Sorting Tool/task/out" />
+            <option value="$PROJECT_DIR$/File Server/task" />
             <option value="$PROJECT_DIR$/util" />
           </set>
         </option>

@@ -1,42 +1,30 @@
 hyperskill_project:
-  id: 45
-  ide_files: https://stepik.org/media/attachments/lesson/209824/additional_files.json
+  id: 52
+  ide_files: https://stepik.org/media/attachments/lesson/209950/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Tue, 24 Jan 2023 10:42:12 UTC"
+update_date: "Thu, 01 Jan 1970 00:00:00 UTC"
 stages:
-- id: 239
-  step: 5613
+- id: 283
+  step: 5425
   is_completed: true
-- id: 240
-  step: 5382
-  is_completed: true
-- id: 241
-  step: 5383
-  is_completed: true
-- id: 242
-  step: 5384
-  is_completed: true
-- id: 243
-  step: 5385
-  is_completed: true
-- id: 244
-  step: 5386
-  is_completed: true
+- id: 284
+  step: 5426
+  is_completed: false
+- id: 285
+  step: 5427
+  is_completed: false
+- id: 286
+  step: 5428
+  is_completed: false
 topics:
   0:
   - title: "Write, compile, and run"
     theory_id: 3739
-  - title: "JVM, JRE, and JDK"
-    theory_id: 3499
   - title: Units of information
     theory_id: 6865
   - title: IDE
     theory_id: 10996
-  - title: Introduction to Operating systems
-    theory_id: 9704
-  - title: Immutability
-    theory_id: 7929
   - title: Computer programming
     theory_id: 8739
   - title: Paradigms
@@ -105,40 +93,30 @@ topics:
     theory_id: 3514
   - title: String
     theory_id: 3523
+  - title: Final variables
+    theory_id: 7427
   - title: Errors in programs
     theory_id: 3536
   - title: What is an exception
     theory_id: 3497
-  - title: NPE
-    theory_id: 1945
   - title: Introduction to OOP
     theory_id: 3614
   - title: Package
     theory_id: 3621
   - title: Hierarchy of exceptions
     theory_id: 3570
-  - title: Command line overview
-    theory_id: 8977
-  - title: Parameters and Options
-    theory_id: 9746
-  - title: Running programs on your computer
-    theory_id: 3746
-  - title: Command-line arguments
-    theory_id: 3566
   - title: Processing strings
     theory_id: 3551
+  - title: Formatted output
+    theory_id: 7046
   - title: What is a bug
     theory_id: 5504
   - title: IntelliJ IDEA
     theory_id: 3801
-  - title: IntelliJ Run Configurations
-    theory_id: 10630
   - title: Introduction to logging
     theory_id: 5538
   - title: Debugging techniques
     theory_id: 13775
-  - title: Floating-point types
-    theory_id: 3517
   - title: Defining classes
     theory_id: 3618
   - title: Constructor
@@ -151,15 +129,78 @@ topics:
     theory_id: 3599
   - title: Inheritance
     theory_id: 3583
+  - title: Protected modifier
+    theory_id: 6692
+  - title: Referencing subclass objects
+    theory_id: 3585
   - title: Multiple constructors
     theory_id: 3538
   - title: The keyword super
     theory_id: 3588
   - title: Objects
     theory_id: 4727
+  - title: Static members
+    theory_id: 3534
+  - title: Annotations basics
+    theory_id: 3622
+  - title: Hiding and overriding
+    theory_id: 3572
+  - title: Polymorphism
+    theory_id: 3587
+  - title: Interface
+    theory_id: 3615
+  1:
+  - title: "JVM, JRE, and JDK"
+    theory_id: 3499
+  - title: Introduction to Operating systems
+    theory_id: 9704
+  - title: Immutability
+    theory_id: 7929
+  - title: NPE
+    theory_id: 1945
+  - title: Exception handling
+    theory_id: 3552
+  - title: Throwing exceptions
+    theory_id: 3553
+  - title: Command line overview
+    theory_id: 8977
+  - title: Parameters and Options
+    theory_id: 9746
+  - title: Running programs on your computer
+    theory_id: 3746
+  - title: Files
+    theory_id: 3635
+  - title: Reading files
+    theory_id: 3636
+  - title: Writing files
+    theory_id: 3652
+  - title: "Synchronous, asynchronous, parallel"
+    theory_id: 9332
+  - title: Processes and threads
+    theory_id: 9420
+  - title: What are streams
+    theory_id: 5533
+  - title: Input streams
+    theory_id: 9723
+  - title: Output streams
+    theory_id: 8837
+  - title: Sockets
+    theory_id: 4942
+  - title: Introduction to generic programming
+    theory_id: 3492
+  - title: Lambda expressions
+    theory_id: 11635
+  - title: Threads as objects
+    theory_id: 4875
+  - title: Custom threads
+    theory_id: 4876
+  - title: Thread management
+    theory_id: 3619
+  - title: Exceptions in threads
+    theory_id: 4882
   - title: Boxing and unboxing
     theory_id: 3595
-  1:
+  3:
   - title: Computer algorithms
     theory_id: 16547
   - title: The big O notation
@@ -170,8 +211,6 @@ topics:
     theory_id: 16927
   - title: Iterating over arrays
     theory_id: 3602
-  - title: Final variables
-    theory_id: 7427
   - title: Pseudocode
     theory_id: 15090
   - title: Pseudocode basics
@@ -182,72 +221,34 @@ topics:
     theory_id: 20078
   - title: Dynamic array
     theory_id: 5357
-  - title: Introduction to generic programming
-    theory_id: 3492
-  - title: What are collections
-    theory_id: 3770
-  - title: ArrayList
-    theory_id: 3567
-  - title: Protected modifier
-    theory_id: 6692
-  - title: Referencing subclass objects
-    theory_id: 3585
-  - title: Static members
-    theory_id: 3534
-  - title: Annotations basics
-    theory_id: 3622
-  - title: Hiding and overriding
-    theory_id: 3572
-  - title: Polymorphism
-    theory_id: 3587
-  - title: Enums in Java
-    theory_id: 11514
-  - title: Fields and methods in enum
-    theory_id: 11523
-  2:
-  - title: Ordering and total order
-    theory_id: 9253
-  - title: Recursion basics
-    theory_id: 5984
-  - title: Decrease and conquer
-    theory_id: 14669
-  - title: Divide and conquer
-    theory_id: 19087
+  - title: Serialization basics
+    theory_id: 8147
+  - title: Custom serialization
+    theory_id: 3616
   - title: Generics and Object
     theory_id: 3493
-  - title: Lambda expressions
-    theory_id: 11635
   - title: Method references
     theory_id: 3620
   - title: Functional interfaces
     theory_id: 11636
+  - title: What are collections
+    theory_id: 3770
   - title: The Collections Framework overview
     theory_id: 3624
+  - title: ArrayList
+    theory_id: 3567
   - title: The List interface
     theory_id: 3581
   - title: The Set interface
     theory_id: 3575
-  - title: Enumset
-    theory_id: 19793
-  - title: Sorting problem
-    theory_id: 4954
-  - title: Comparator
-    theory_id: 12966
-  - title: Insertion sort
-    theory_id: 19086
-  - title: Merge sort
-    theory_id: 4964
-  - title: The Object class
-    theory_id: 3596
-  - title: Interface
-    theory_id: 3615
-  - title: Anonymous classes
-    theory_id: 11896
-  - title: Default methods
-    theory_id: 11354
-  - title: Comparable
-    theory_id: 14456
-  3:
+  - title: Shared data
+    theory_id: 3610
+  - title: Thread synchronization
+    theory_id: 3557
+  - title: Executors
+    theory_id: 4895
+  - title: ThreadLocal
+    theory_id: 23984
   - title: "Hashing: overview"
     theory_id: 9831
   - title: Hash function
@@ -256,15 +257,9 @@ topics:
     theory_id: 13054
   - title: The Map interface
     theory_id: 3558
-  4:
-  - title: Exception handling
-    theory_id: 3552
-  5:
-  - title: Files
-    theory_id: 3635
-  - title: Reading files
-    theory_id: 3636
-  - title: Formatted output
-    theory_id: 7046
-  - title: Writing files
-    theory_id: 3652
+  - title: The Object class
+    theory_id: 3596
+  - title: Anonymous classes
+    theory_id: 11896
+  - title: Default methods
+    theory_id: 11354
