@@ -82,34 +82,12 @@ files:
         }
     }
   learner_created: false
-- name: src/server/Storage.java
+- name: src/client/Main.java
   visible: true
-  text: |
-    package server;
-
-
-    import java.util.HashSet;
-
-    public class Storage {
-        HashSet<String> files;
-
-        public Storage(){
-            files = new HashSet<>();
-        }
-
-        public boolean add(String filename){
-            return files.add(filename);
-        }
-
-        public boolean delete(String filename){
-            return files.remove(filename);
-        }
-
-        public boolean get(String filename){
-            return files.contains(filename);
-        }
-    }
   learner_created: true
 feedback_link: https://hyperskill.org/projects/52/stages/284/implement#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 25 Jan 2023 20:27:00 UTC"
+record: 2

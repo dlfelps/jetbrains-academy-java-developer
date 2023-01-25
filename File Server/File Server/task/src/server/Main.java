@@ -1,86 +1,49 @@
 package server;
 
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
 
-enum Action{
-    ADD, GET, DELETE, EXIT;
 
-    public static Action from(String s){
-        return switch (s.toLowerCase()){
-            case "add" -> ADD;
-            case "get" -> GET;
-            case "delete" -> DELETE;
-            default -> EXIT;
-        };
-    }
-}
+class Session extends Thread {
+    private final Socket socket;
 
-class Controller {
-
-    Storage server;
-    public Controller(Storage server){
-        this.server = server;
-    }
-    public void go() {
-        Scanner s = new Scanner(System.in);
-        String nextLine;
-        Action nextCommand;
-
-        do {
-            nextLine = s.nextLine();
-            var commands = nextLine.split(" ");
-            nextCommand = Action.from(commands[0]);
-            switch (nextCommand) {
-                case ADD -> tryAdd(commands[1]);
-                case GET -> tryGet(commands[1]);
-                case DELETE -> tryDelete(commands[1]);
-            }
-        } while (nextCommand != Action.EXIT);
+    public Session(Socket socketForClient) {
+        this.socket = socketForClient;
     }
 
-    private void tryAdd(String filename){
-        if (isValidFilename(filename) && server.add(filename)) {
-            System.out.printf("The file %s added successfully%n", filename);
-        } else {
-            System.out.printf("Cannot add the file %s %n", filename);
+    @Override
+    public void run() {
+        try (
+                DataInputStream input = new DataInputStream(socket.getInputStream());
+                DataOutputStream output = new DataOutputStream(socket.getOutputStream())
+        ) {
+            String msg = input.readUTF();
+            System.out.printf("Received: %s%n", msg);
+            String outgoing = "All files were sent!";
+            output.writeUTF(outgoing);
+            System.out.printf("Sent: %s%n", outgoing);
+            socket.close();//where the socket gets closed
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-    private boolean isValidFilename(String filename){
-        if (filename.length()>6) {
-            return false;
-        }
-
-        if (filename.equals("file11")){
-            return false;
-        }
-        return true;
-    }
-
-    private void tryGet(String filename){
-        if (server.get(filename)) {
-            System.out.printf("The file %s was sent%n", filename);
-        } else {
-            System.out.printf("The file %s not found%n", filename);
-        }
-    }
-    private void tryDelete(String filename){
-        if (server.delete(filename)) {
-            System.out.printf("The file %s was deleted%n", filename);
-        } else {
-            System.out.printf("The file %s not found%n", filename);
-        }
-    }
-
 }
 
 public class Main {
 
+    private static final int PORT = 23456;
+    private static final String ADDRESS = "127.0.0.1";
+
     public static void main(String[] args) {
 
-        Storage server = new Storage();
-        Controller c = new Controller(server);
-        c.go();
+        System.out.println("Server started!");
+        try (ServerSocket incoming = new ServerSocket(PORT, 50, InetAddress.getByName(ADDRESS))) { //where the socket gets created
 
+            Session session = new Session(incoming.accept());
+            session.start(); // it does not block this thread
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
