@@ -29,7 +29,7 @@ class Session extends Thread {
     }
 }
 
-public class Main {
+public class Main { 
 
     private static final int PORT = 23456;
     private static final String ADDRESS = "127.0.0.1";
