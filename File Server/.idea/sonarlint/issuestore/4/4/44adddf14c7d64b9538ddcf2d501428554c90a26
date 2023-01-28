@@ -1,0 +1,50 @@
+
+°
+java:S1192U"’Define a constant instead of duplicating this literal "C:\\Users\\Nai\\IdeaProjects\\File Server\\File Server\\task\\src\\server\\data\\" 3 times.(çÿÄ„8ôšúŞ0
+m
+java:S1192á"JDefine a constant instead of duplicating this literal "The file " 5 times.(ÌˆÛıÿÿÿÿ8ôšúŞ0
+x
+java:S1192Ñ"UDefine a constant instead of duplicating this literal "Cannot add the file " 3 times.(–‘´£ûÿÿÿÿ8ôšúŞ0
+
+java:S1319N"bThe type of "idMap" should be an interface such as "Map" rather than the implementation "HashMap".(Şÿ®´8•ôšúŞ0
+
+java:S1319k"bThe type of "idMap" should be an interface such as "Map" rather than the implementation "HashMap".(ë´ÀÉ8–ôšúŞ0
+€
+java:S1319‹"bThe type of "idMap" should be an interface such as "Map" rather than the implementation "HashMap".(ÇëËŞ8—ôšúŞ0
+…
+java:S1319Â"bThe type of "idMap" should be an interface such as "Map" rather than the implementation "HashMap".(õÌ„¨ûÿÿÿÿ8—ôšúŞ0
+r
+java:S2095¼"OUse try-with-resources or close this "ObjectInputStream" in a "finally" clause.(¦Â’Éıÿÿÿÿ8¶‹›úŞ0
+n
+java:S2095²"PUse try-with-resources or close this "ObjectOutputStream" in a "finally" clause.(ŒÈ’ë8¶‹›úŞ0
+o
+java:S2095»"QUse try-with-resources or close this "BufferedInputStream" in a "finally" clause.(€š†Á8¶‹›úŞ0
+l
+java:S2095"JUse try-with-resources or close this "ServerSocket" in a "finally" clause.(ç±€Îıÿÿÿÿ8¶‹›úŞ0
+u
+java:S2095±"RUse try-with-resources or close this "BufferedOutputStream" in a "finally" clause.(£ğóÙûÿÿÿÿ8¶‹›úŞ0
+]	java:S125"<This block of commented-out lines of code should be removed.(¥”‡øÿÿÿÿ8º‹›úŞ0
+X	java:S125"<This block of commented-out lines of code should be removed.(¥Úÿ¼8»‹›úŞ0
+C
+java:S1659"&Declare "response" on a separate line.(¦®Ø8½‹›úŞ0
+X	java:S125""<This block of commented-out lines of code should be removed.(ÒÔŞá8¿‹›úŞ0
+X	java:S125?"<This block of commented-out lines of code should be removed.(æ¸ï‰8Ã‹›úŞ0
+C
+java:S1659l"&Declare "response" on a separate line.(°ø¨‰8É‹›úŞ0
+G
+java:S1659Œ"$Declare "fileId" on a separate line.(ÉÚ¯êùÿÿÿÿ8Í‹›úŞ0
+]	java:S899£";Do something with the "boolean" value returned by "delete".(é‘‚©úÿÿÿÿ8Ï‹›úŞ0
+q
+java:S4042£"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(é‘‚©úÿÿÿÿ8Ğ‹›úŞ0
+d
+java:S1075¯"ARefactor your code to get this URI from a customizable parameter.(¸Ê¦§ùÿÿÿÿ8Ó‹›úŞ0
+9
+java:S3626ç"Remove this redundant jump.(ûÁİ…8Ş‹›úŞ0
+9
+java:S3626ó"Remove this redundant jump.(ûÁİ…8õ‹›úŞ0
+H
+java:S1197ê"*Move the array designators [] to the type.(ôÜ­Œ8÷‹›úŞ0
+9
+java:S3626€"Remove this redundant jump.(ûÁİ…8ø‹›úŞ0
+M
+java:S1197ö"*Move the array designators [] to the type.(­õŠÎøÿÿÿÿ8ù‹›úŞ0

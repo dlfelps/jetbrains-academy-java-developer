@@ -271,6 +271,12 @@ files:
         }
     }
   learner_created: true
+- name: src/server/FileStorage.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/52/stages/285/implement#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 26 Jan 2023 11:31:37 UTC"
+record: 3

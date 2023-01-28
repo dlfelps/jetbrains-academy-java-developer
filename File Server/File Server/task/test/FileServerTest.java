@@ -1,4 +1,3 @@
-import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testcase.TestCase;
@@ -6,124 +5,187 @@ import org.hyperskill.hstest.testing.TestedProgram;
 import org.junit.AfterClass;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+
+import static org.hyperskill.hstest.common.Utils.sleep;
 
 public class FileServerTest extends StageTest<String> {
 
     private static final String onConnectExceptionMessage = "A client can't connect to the server!\n" +
         "Make sure the server handles connections and doesn't stop after one client connected.";
-    private static final String filesPath = System.getProperty("user.dir") +
+
+    public static final String serverDataPath = System.getProperty("user.dir") +
         File.separator + "src" + File.separator + "server" + File.separator + "data" + File.separator;
 
-    private static final Map<String, String> savedFiles = new HashMap<>();
+    public static final String clientDataPath = System.getProperty("user.dir") +
+        File.separator + "src" + File.separator + "client" + File.separator + "data" + File.separator;
+
+    private static String id;
 
     @Override
     public List<TestCase<String>> generate() {
-        return Collections.singletonList(
+        return List.of(
             new TestCase<String>()
                 .feedbackOnException(ConnectException.class, onConnectExceptionMessage)
-                .setDynamicTesting(this::test)
+                .setDynamicTesting(this::checkServerStop),
+            new TestCase<String>()
+                .feedbackOnException(ConnectException.class, onConnectExceptionMessage)
+                .setDynamicTesting(this::checkPaths),
+            new TestCase<String>()
+                .feedbackOnException(ConnectException.class, onConnectExceptionMessage)
+                .setDynamicTesting(this::testSaveAndGet),
+            new TestCase<String>()
+                .feedbackOnException(ConnectException.class, onConnectExceptionMessage)
+                .setDynamicTesting(this::testGetAfterServerRestart),
+            new TestCase<String>()
+                .feedbackOnException(ConnectException.class, onConnectExceptionMessage)
+                .setDynamicTesting(this::testDeleteFiles)
         );
     }
 
-    CheckResult test() {
+    // Test #1. Check if server stops
+    CheckResult checkServerStop() {
 
-        testStopServer();
-
+        TestedProgram server = getServer();
         TestedProgram client;
-        TestedProgram server = new TestedProgram("server");
-        String fileName;
-        String fileContent;
 
-        if (!Files.exists(Paths.get(filesPath)) || !Files.isDirectory(Paths.get(filesPath))) {
+        server.startInBackground();
+
+        client = getClient();
+        client.start();
+        client.execute("exit");
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (!server.isFinished()) {
+            return CheckResult.wrong("You should stop the server if a client sends 'exit'");
+        }
+
+        return CheckResult.correct();
+    }
+
+    CheckResult checkPaths() {
+        // Test #2. Check folders with data
+        if (!Files.exists(Paths.get(serverDataPath)) || !Files.isDirectory(Paths.get(serverDataPath))) {
             return CheckResult.wrong("Can't find '/server/data' folder. You should store all saved files in it!\n" +
                 "The folder should be created even if the server wasn't started!");
         }
 
-        // Delete files in case the previous test was failed with exception
-        deleteTestFiles();
+        if (!Files.exists(Paths.get(clientDataPath)) || !Files.isDirectory(Paths.get(clientDataPath))) {
+            return CheckResult.wrong("Can't find '/client/data' folder. You should store all files you want to " +
+                "store on the server in it!\n" +
+                "The folder should be created even if the client wasn't started!");
+        }
+        return CheckResult.correct();
+    }
+
+
+    CheckResult testSaveAndGet() {
+
+        TestedProgram server;
+        TestedProgram client;
+
+        Utils.createFiles(clientDataPath);
+
+        // Test #3. Check saving file on the server
+        server = getServer();
         server.startInBackground();
 
-        // Test #1 Saving a file on the server
+        File folder = new File(serverDataPath);
+        int numOfFilesBeforeAdding = Utils.numExistingFiles(folder);
+
         client = getClient();
         client.start();
-        fileName = FileNameGenerator.name();
-        fileContent = FileNameGenerator.content();
-        savedFiles.put(fileName, fileContent);
-        client.execute(String.format("2\n%s\n%s", fileName, fileContent));
+        client.execute("2\ntest_purpose_test1.txt");
+        String clientOutput = client.execute("");
 
-        if (!isFileExists(fileName)) {
-            return CheckResult.wrong("Can't find just saved file in the /server/data folder!");
+        if (!clientOutput.contains("Response says that file is saved! ID =")) {
+            return CheckResult.wrong("After saving a file on the server you should print:\n" +
+                "Response says that file is saved! ID = **, where ** is an id of the file!");
         }
 
-        String savedFileContent = getFileContent(fileName);
-        if (!savedFileContent.equals(savedFiles.get(fileName))) {
+        id = Utils.findId(clientOutput);
+
+        int numOfFilesAfterAdding = Utils.numExistingFiles(folder);
+
+        if (numOfFilesAfterAdding == numOfFilesBeforeAdding) {
+            return CheckResult.wrong("Once a client saved a file on the server number of files in /server/data/ should be changed!");
+        }
+
+        client = getClient();
+        client.start();
+        clientOutput = client.execute("2\ntest_purpose_test2.txt\ntest_purpose_newFile.txt");
+
+        if (!clientOutput.contains("Response says that file is saved! ID =")) {
+            return CheckResult.wrong("After saving a file on the server you should print:\n" +
+                "Response says that file is saved! ID = **, where ** is an id of the file!");
+        }
+
+        if (!Utils.isServerFileExists("test_purpose_newFile.txt")) {
+            return CheckResult.wrong("Can't find a file after saving on the server." +
+                "You should save client's files in /server/data/ folder!");
+        }
+
+        String savedFileContent = Utils.getServerFileContent("test_purpose_newFile.txt");
+
+        if (!savedFileContent.equals("test2")) {
             return CheckResult.wrong("A file after saving has wrong content!");
         }
 
-        // Test #2 Saving a fail that already exists
+        // Test #4. Check getting files
         client = getClient();
         client.start();
-        String output = client.execute(String.format("2\n%s\n%s", fileName, fileContent));
+        clientOutput = client.execute("1\n1\ntest_purpose_notExist.txt");
 
-        if (!output.contains("The response says that creating the file was forbidden!")) {
-            return CheckResult.wrong("You should print 'The response says that creating the file was forbidden!' " +
-                "if a client tries to add file that already exist!");
+        if (!clientOutput.contains("The response says that this file is not found!")) {
+            return CheckResult.wrong("When client tries to get a file by name that doesn't exist you should print:\n" +
+                "\"The response says that this file is not found!\"");
         }
 
-        // Test #3 Getting a file
         client = getClient();
         client.start();
-        output = client.execute(String.format("1\n%s", fileName));
+        clientOutput = client.execute("1\n2\n" + (id + "511"));
 
-        if (!output.contains("The content of the file is")) {
-            return CheckResult.wrong("When a client tries to get a file that is stored on the server" +
-                " you should print:\n\"The content of the file is: FILE_CONTENT\"\nwhere FILE_CONTENT is a " +
-                "content of the requested file!");
+        if (!clientOutput.contains("The response says that this file is not found!")) {
+            return CheckResult.wrong("When client tries to get a file by ID that doesn't exist you should print:\n" +
+                "\"The response says that this file is not found!\"");
         }
 
-        if (!output.contains(fileContent)) {
-            return CheckResult.wrong("The server returned wrong content of the file!");
-        }
-
-        // Test #4 Getting a not existing file
         client = getClient();
         client.start();
-        fileName = FileNameGenerator.name();
-        output = client.execute(String.format("1\n%s", fileName));
+        client.execute("1\n1\ntest_purpose_newFile.txt\ntest_purpose_get.txt");
 
-        if (!output.contains("The response says that the file was not found!")) {
-            return CheckResult.wrong("You should print \"The response says that the file was not found!\" if a" +
-                " client tries to request a file that doesn't exist");
+        if (!Utils.isClientFileExists("test_purpose_get.txt")) {
+            return CheckResult.wrong("Can't find a file after getting it from the server by name.\n" +
+                "You should store all downloaded files from the server in /client/data/ folder.");
         }
 
-        // Test #5 Deleting a file that doesn't exist
+        String downloadedByNameFileContent = Utils.getClientFileContent("test_purpose_get.txt");
+        if (!downloadedByNameFileContent.equals("test2")) {
+            return CheckResult.wrong("After getting a file from the server by name it has wrong content!");
+        }
+
         client = getClient();
         client.start();
-        fileName = FileNameGenerator.name();
-        output = client.execute(String.format("3\n%s", fileName));
+        client.execute("1\n2\n" + id + "\ntest_purpose_get_id.txt");
 
-        if (!output.contains("The response says that the file was not found!")) {
-            return CheckResult.wrong("You should print \"The response says that the file was not found!\" if a" +
-                " client tries to delete a file that doesn't exist");
+        if (!Utils.isClientFileExists("test_purpose_get_id.txt")) {
+            return CheckResult.wrong("Can't find a file after getting it from the server by ID.\n" +
+                "You should store all downloaded files from the server in /client/data/ folder.");
         }
 
-        // Test #6 Deleting a file
-        client = getClient();
-        client.start();
-
-        fileName = savedFiles.keySet().stream().findFirst().get();
-        client.execute(String.format("3\n%s", fileName));
-
-        if (isFileExists(fileName)) {
-            return CheckResult.wrong("You should delete a file from /server/data folder if the user requests it!");
+        String downloadedByIdFileContent = Utils.getClientFileContent("test_purpose_get_id.txt");
+        if (!downloadedByIdFileContent.equals("test1")) {
+            return CheckResult.wrong("After getting a file from the server by ID it has wrong content!");
         }
 
-        // Stop server
         client = getClient();
         client.start();
         client.execute("exit");
@@ -131,92 +193,88 @@ public class FileServerTest extends StageTest<String> {
         return CheckResult.correct();
     }
 
-    private static void testStopServer() {
-        TestedProgram server = new TestedProgram("server");
-        TestedProgram client = new TestedProgram("client");
+    CheckResult testGetAfterServerRestart() {
+
+        TestedProgram server = getServer();
+        TestedProgram client = getClient();
 
         server.startInBackground();
         client.start();
+        client.execute("1\n1\ntest_purpose_newFile.txt\ntest_purpose_get_after_restart.txt");
+
+        if (!Utils.isClientFileExists("test_purpose_get_after_restart.txt")) {
+            return CheckResult.wrong("Can't find a file after getting it from the server by name.\n" +
+                "Looks like your server lose all stored files after restart.\n" +
+                "You should store all downloaded files from the server in /client/data/ folder.");
+        }
+
+        client = getClient();
+        client.start();
+        client.execute("1\n2\n" + id + "\ntest_purpose_get_by_id_after_restart.txt");
+
+        if (!Utils.isClientFileExists("test_purpose_get_by_id_after_restart.txt")) {
+            return CheckResult.wrong("Can't find a file after getting it from the server by ID.\n" +
+                "Looks like your server lose all stored files after restart.\n" +
+                "You should store all downloaded files from the server in /client/data/ folder.");
+        }
+
+        client = getClient();
+        client.start();
         client.execute("exit");
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ignored) {}
+        return CheckResult.correct();
+    }
 
-        if (!server.isFinished()) {
-            throw new WrongAnswer("The server should stop after a client sends 'exit'!");
+    CheckResult testDeleteFiles() {
+
+        TestedProgram server = getServer();
+        TestedProgram client = getClient();
+
+        File folder = new File(serverDataPath);
+        int numOfFilesBeforeDeleting = Utils.numExistingFiles(folder);
+
+        server.startInBackground();
+        client.start();
+        client.execute("3\n1\ntest_purpose_newFile.txt");
+
+        sleep(2000);
+        int numOfFilesAfterDeletingByName = Utils.numExistingFiles(folder);
+        if (numOfFilesBeforeDeleting == numOfFilesAfterDeletingByName) {
+            return CheckResult.wrong("Once a client deleted a file by name from the server, " +
+                "number of files in /server/data/ should be fewer!");
         }
-    }
 
-    private static void deleteTestFiles() {
-        File dir = new File(filesPath);
-        for (File file : Objects.requireNonNull(dir.listFiles())) {
-            if (file.getName().startsWith("test_purpose_")) {
-                boolean isDeleted = file.delete();
-                if (!isDeleted) {
-                    throw new WrongAnswer("Can't delete test files. Maybe they are not closed!");
-                }
-            }
+        client = getClient();
+        client.start();
+        client.execute("3\n2\n" + id);
+
+        sleep(2000);
+        int numOfFilesAfterDeletingById = Utils.numExistingFiles(folder);
+        if (numOfFilesAfterDeletingByName == numOfFilesAfterDeletingById) {
+            return CheckResult.wrong("Once a client deleted a file by ID from the server, " +
+                "number of files in /server/data/ should be fewer!");
         }
+
+        client = getClient();
+        client.start();
+        client.execute("exit");
+
+        return CheckResult.correct();
     }
 
-    private static boolean isFileExists(String fileName) {
-        String path = filesPath + fileName;
-        return Files.exists(Paths.get(path)) && !Files.isDirectory(Paths.get(path));
-    }
-
-    private static String getFileContent(String fileName) {
-        String path = filesPath + fileName;
-        try {
-            return new String(Files.readAllBytes(Paths.get(path))).trim();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Calls fatal error
-        throw new RuntimeException("Can't read file!");
-    }
 
     @AfterClass
     public static void afterTestDeleteFiles() {
-        deleteTestFiles();
+        Utils.deleteTestFiles();
     }
 
     public static TestedProgram getClient() {
         return new TestedProgram("client");
     }
-}
 
-class FileNameGenerator {
-
-    private final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
-    private final static Random rand = new Random();
-    private final static Set<String> identifiers = new HashSet<>();
-
-    public static String name() {
-        return generate(5, true);
-    }
-
-    public static String content() {
-        return generate(15, false);
-    }
-
-    public static String generate(int len, boolean name) {
-        StringBuilder builder = new StringBuilder();
-
-        while (builder.toString().length() == 0) {
-            if (name) builder.append("test_purpose_");
-            int length = rand.nextInt(len) + 5;
-            for (int i = 0; i < length; i++) {
-                builder.append(lexicon.charAt(rand.nextInt(lexicon.length())));
-            }
-            if (identifiers.contains(builder.toString())) {
-                builder = new StringBuilder();
-            } else {
-                identifiers.add(builder.toString());
-            }
-        }
-        if (name) builder.append(".txt");
-        return builder.toString();
+    public static TestedProgram getServer() {
+        return new TestedProgram("server");
     }
 }
+
 
