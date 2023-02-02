@@ -8,6 +8,7 @@ public class Main {
     var menu = true;
     while (menu){
         menu = pb.menu();
+        System.out.println();
     }
     }
 }

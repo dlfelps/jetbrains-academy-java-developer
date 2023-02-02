@@ -5,6 +5,7 @@ import org.hyperskill.hstest.testcase.TestCase;
 import java.util.List;
 import java.util.function.Function;
 
+
 class TestClue {
 
     Function<String, CheckResult> callback;
@@ -17,74 +18,17 @@ class TestClue {
 
 public class ContactsTest extends StageTest<TestClue> {
 
-    private TestCase<TestClue> testPhoneNumber(String num, boolean isCorrect, boolean giveHint) {
-        return new TestCase<TestClue>()
-            .setInput(
-                "count\n" +
-                    "add\n" +
-                    "John1\n" +
-                    "Smith2\n" +
-                    num + "\n" +
-                    "list\n" +
-                    "exit")
-            .setAttach(new TestClue(output -> {
-
-                boolean containsNum = output.contains(num);
-                boolean containsNoNumber = output.contains("[no number]");
-
-                if (containsNum && containsNoNumber) {
-                    return new CheckResult(false,
-                        "On \'list\" action you seem to output both " +
-                            "\"[no number]\" and an actual number - " +
-                            "you should output only one of them."
-                    );
-                }
-
-                if (!containsNum && !containsNoNumber) {
-                    return new CheckResult(false,
-                        "On \'list\" action you seem to output neither " +
-                            "\"[no number]\" nor an actual number - " +
-                            "you should output one of them."
-                    );
-                }
-
-
-                if (isCorrect &&
-                    !output.contains(num) &&
-                    output.contains("[no number]")
-
-                    ||
-
-                    !isCorrect &&
-                        output.contains(num) &&
-                        !output.contains("[no number]")
-                ) {
-                    if (giveHint) {
-                        if (isCorrect) {
-                            return new CheckResult(false,
-                                "Test contains a legal phone number \"" + num + "\", " +
-                                    "you should print this number instead of \"[no number]\"");
-                        } else {
-                            return new CheckResult(false,
-                                "Test contains an illegal phone number \"" + num + "\", " +
-                                    "you should print \"[no number]\" instead of this number");
-                        }
-                    } else {
-                        if (isCorrect) {
-                            return new CheckResult(false,
-                                "Test contains an legal phone number, " +
-                                    "you should print this number instead of \"[no number]\"");
-                        } else {
-                            return new CheckResult(false,
-                                "Test contains an illegal phone number, " +
-                                    "you should print \"[no number]\" instead of this number");
-                        }
-                    }
-                }
-                return CheckResult.correct();
-            }));
+    private CheckResult splitActionsFeedback(int actualSize, int needSize) {
+        if (actualSize < needSize) {
+            return CheckResult.wrong(String.format("This test should contain at least %d actions, but you have only %d. " +
+                            "You should separate your actions with an empty line.",
+                    needSize,
+                    actualSize));
+        } else {
+            return null;
+        }
     }
-
+    
     @Override
     public List<TestCase<TestClue>> generate() {
         return List.of (
@@ -102,38 +46,13 @@ public class ContactsTest extends StageTest<TestClue> {
             new TestCase<TestClue>()
                 .setInput(
                     "count\n" +
-                        "exit")
+                    "exit")
                 .setAttach(new TestClue(output -> {
                     output = output.strip().toLowerCase();
                     if (!output.contains("0 records")) {
                         return new CheckResult(false,
-                            "No \"0 records\" substring found in the output");
-                    }
-                    return CheckResult.correct();
-                })),
-
-            new TestCase<TestClue>()
-                .setInput(
-                    "edit\n" +
-                        "exit")
-                .setAttach(new TestClue(output -> {
-                    output = output.strip().toLowerCase();
-                    if (!output.contains("no records to edit")) {
-                        return new CheckResult(false,
-                            "No \"No records to edit\" substring found in the output");
-                    }
-                    return CheckResult.correct();
-                })),
-
-            new TestCase<TestClue>()
-                .setInput(
-                    "remove\n" +
-                        "exit")
-                .setAttach(new TestClue(output -> {
-                    output = output.strip().toLowerCase();
-                    if (!output.contains("no records to remove")) {
-                        return new CheckResult(false,
-                            "No \"No records to remove\" substring found in the output");
+                            "No \"0 records\" substring found in the output. " +
+                                    "If you already have the database, try to delete it.");
                     }
                     return CheckResult.correct();
                 })),
@@ -141,11 +60,14 @@ public class ContactsTest extends StageTest<TestClue> {
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
+                        "person\n" +
                         "John\n" +
                         "Smith\n" +
+                        "\n" +
+                        "\n" +
                         "123 456 789\n" +
-                        "count\n" +
-                        "exit")
+                    "count\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
                     output = output.strip().toLowerCase();
                     if (output.contains("0 records")) {
@@ -158,219 +80,264 @@ public class ContactsTest extends StageTest<TestClue> {
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "John1\n" +
-                        "Smith2\n" +
-                        "123-456-78912\n" +
-                        "list\n" +
-                        "exit")
+                        "person\n" +
+                        "John\n" +
+                        "Smith\n" +
+                        "\n" +
+                        "\n" +
+                        "123 456 789\n" +
+                    "list\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. John1 Smith2, 123-456-78912") &&
-                        !output.contains("1. John1 Smith2, [no number]")) {
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 3);
+                    if (feedback != null) return feedback;
 
-                        return new CheckResult(false,
-                            "No \"[id]. [name] [surname], [phone]\" part " +
-                                "after \"list\" action");
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Name: John")
+                                && infoBlock.contains("Surname: Smith")
+                                && infoBlock.contains("Birth date: [no data]")
+                                && infoBlock.contains("Gender: [no data]")
+                                && infoBlock.contains("Number: 123 456 789")
+                                && infoBlock.contains("Time created:")
+                                && infoBlock.contains("Time last edit:")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
-                })),
-
-            testPhoneNumber("123", true, true),
-            testPhoneNumber("123 abc", true, true),
-            testPhoneNumber("123-ABC", true, true),
-            testPhoneNumber("123 456 xyz", true, true),
-            testPhoneNumber("123-456-XYZ", true, true),
-            testPhoneNumber("123 456-789", true, true),
-            testPhoneNumber("123-456 789", true, true),
-            testPhoneNumber("123 45-up-89", true, true),
-
-            testPhoneNumber("(123)", true, true),
-            testPhoneNumber("(123) 456", true, true),
-            testPhoneNumber("123-(456)", true, true),
-            testPhoneNumber("123 (456) 789", true, true),
-            testPhoneNumber("123-(456)-789", true, true),
-            testPhoneNumber("(123) 456-789", true, true),
-            testPhoneNumber("(123)-456 789", true, true),
-            testPhoneNumber("123 (45)-67-89", true, true),
-            testPhoneNumber("+(phone)", true, true),
-
-            testPhoneNumber("123+456 78912", false, true),
-            testPhoneNumber("(123)-456-(78912)", false, true),
-            testPhoneNumber("9", true, true),
-            testPhoneNumber("123 456 9", false, true),
-            testPhoneNumber("123 9 9234", false, true),
-            testPhoneNumber("123 4?5 678", false, true),
-            testPhoneNumber("+(with space)", false, true),
-
-
-            testPhoneNumber("193", true, false),
-            testPhoneNumber("129 abf", true, false),
-            testPhoneNumber("123-AFC", true, false),
-            testPhoneNumber("154 456 xyz", true, false),
-            testPhoneNumber("123-566-XYZ", true, false),
-            testPhoneNumber("123 456-349", true, false),
-            testPhoneNumber("134-456 789", true, false),
-            testPhoneNumber("123 45-down-89", true, false),
-
-            testPhoneNumber("(234)", true, false),
-            testPhoneNumber("(123) 566", true, false),
-            testPhoneNumber("873-(456)", true, false),
-            testPhoneNumber("123 (786) 789", true, false),
-            testPhoneNumber("163-(456)-789", true, false),
-            testPhoneNumber("(123) 496-789", true, false),
-            testPhoneNumber("(173)-456 789", true, false),
-            testPhoneNumber("123 (95)-67-89", true, false),
-            testPhoneNumber("+(another)", true, false),
-
-            testPhoneNumber("132+456 78912", false, false),
-            testPhoneNumber("(123)-456-(45912)", false, false),
-            testPhoneNumber("8", true, false),
-            testPhoneNumber("153 456 9", false, false),
-            testPhoneNumber("823 9 9234", false, false),
-            testPhoneNumber("123 4?5 654", false, false),
-            testPhoneNumber("+(another space)", false, true),
-            
-            testPhoneNumber("+1 ()", false, false),
-            testPhoneNumber("+1 11", true, false),
-
-            new TestCase<TestClue>()
-                .setInput(
-                    "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "list\n" +
-                        "exit")
-                .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Jq Sr, 123") ||
-                        !output.contains("2. Qw We, 234")) {
-                        return new CheckResult(false,
-                            "New persons should be added at the end of the list");
-                    }
-                    return CheckResult.correct();
+                    return new CheckResult(false,
+                            "Something wrong with printing user info");
                 })),
 
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "edit\n" +
-                        "2\n" +
-                        "name\n" +
-                        "Qe\n" +
-                        "list\n" +
-                        "exit")
+                        "organization\n" +
+                        "Pizza Shop\n" +
+                        "Wall St. 1\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "list\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Jq Sr, 123") ||
-                        !output.contains("2. Qe We, 234")) {
-                        return new CheckResult(false,
-                            "Something wrong with name editing");
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 3);
+                    if (feedback != null) return feedback;
+
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Organization name: Pizza Shop")
+                                && infoBlock.contains("Address: Wall St. 1")
+                                && infoBlock.contains("Number: +0 (123) 456-789-9999")
+                                && infoBlock.contains("Time created:")
+                                && infoBlock.contains("Time last edit:")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
+                    return new CheckResult(false,
+                            "Something wrong with printing organization info");
                 })),
 
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "edit\n" +
-                        "2\n" +
-                        "surname\n" +
-                        "QR\n" +
-                        "list\n" +
-                        "exit")
+                        "person\n" +
+                        "John\n" +
+                        "Smith\n" +
+                        "\n" +
+                        "\n" +
+                        "123 456 789\n" +
+                    "list\n" +
+                    "1\n" +
+                    "edit\n" +
+                        "gender\n" +
+                        "M\n" +
+                    "menu\n" +
+                    "list\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Jq Sr, 123") ||
-                        !output.contains("2. Qw QR, 234")) {
-                        return new CheckResult(false,
-                            "Something wrong with surname editing");
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 6);
+                    if (feedback != null) return feedback;
+
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Name: John")
+                                && infoBlock.contains("Surname: Smith")
+                                && infoBlock.contains("Birth date: [no data]")
+                                && infoBlock.contains("Gender: M")
+                                && infoBlock.contains("Number: 123 456 789")
+                                && infoBlock.contains("Time created:")
+                                && infoBlock.contains("Time last edit:")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
+                    return new CheckResult(false,
+                            "Editing person is not working");
                 })),
 
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "edit\n" +
-                        "2\n" +
-                        "number\n" +
-                        "+(123) (123)\n" +
-                        "list\n" +
-                        "exit")
+                        "organization\n" +
+                        "Pizza Shop\n" +
+                        "Wall St. 1\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "list\n" +
+                    "1\n" +
+                    "edit\n" +
+                        "address\n" +
+                        "Wall St 2\n" +
+                    "menu\n" +
+                    "list\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Jq Sr, 123") ||
-                        !output.contains("2. Qw We, [no number]")) {
-                        return new CheckResult(false,
-                            "Something wrong with number editing");
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 6);
+                    if (feedback != null) return feedback;
+
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Organization name: Pizza Shop")
+                                && infoBlock.contains("Address: Wall St 2")
+                                && infoBlock.contains("Number: +0 (123) 456-789-9999")
+                                && infoBlock.contains("Time created:")
+                                && infoBlock.contains("Time last edit:")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
+                    return new CheckResult(false,
+                            "Editing organization is not working");
                 })),
 
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "remove\n" +
-                        "1\n" +
-                        "list\n" +
-                        "exit")
+                        "organization\n" +
+                        "Pizza Shop\n" +
+                        "Wall St. 1\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "add\n" +
+                        "person\n" +
+                        "John\n" +
+                        "Smith\n" +
+                        "\n" +
+                        "\n" +
+                        "123 456 789\n" +
+                    "add\n" +
+                        "organization\n" +
+                        "PizzaNuts\n" +
+                        "Wall St. 6\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "search\n" +
+                        "pizz\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Qw We, 234")) {
-                        return new CheckResult(false,
-                            "Something wrong with removing contacts");
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 4);
+                    if (feedback != null) return feedback;
+    
+                    
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Pizza Shop")
+                                && infoBlock.contains("PizzaNuts")
+                                && !infoBlock.contains("John")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
+                    return new CheckResult(false,
+                            "Search is not working");
                 })),
 
             new TestCase<TestClue>()
                 .setInput(
                     "add\n" +
-                        "Jq\n" +
-                        "Sr\n" +
-                        "123\n" +
-                        "add\n" +
-                        "Qw\n" +
-                        "We\n" +
-                        "234\n" +
-                        "remove\n" +
-                        "2\n" +
-                        "list\n" +
-                        "exit")
+                        "organization\n" +
+                        "Pizza Shop\n" +
+                        "Wall St. 1\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "add\n" +
+                        "person\n" +
+                        "John\n" +
+                        "Smith\n" +
+                        "\n" +
+                        "\n" +
+                        "123 456 789\n" +
+                    "add\n" +
+                        "organization\n" +
+                        "PizzaNuts\n" +
+                        "Wall St. 6\n" +
+                        "+0 (123) 456-789-9999\n" +
+                    "search\n" +
+                        "s\n" +
+                    "1\n" +
+                    "menu\n" +
+                    "exit")
                 .setAttach(new TestClue(output -> {
-                    if (!output.contains("1. Jq Sr, 123")) {
-                        return new CheckResult(false,
-                            "Something wrong with removing contacts");
+                    String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                    var feedback = splitActionsFeedback(blocks.length, 4);
+                    if (feedback != null) return feedback;
+
+                    for (String infoBlock : blocks) {
+                        if (infoBlock.contains("Pizza Shop")
+                                && infoBlock.contains("John Smith")
+                                && infoBlock.contains("PizzaNuts")) {
+                            return CheckResult.correct();
+                        }
                     }
-                    return CheckResult.correct();
-                }))
+                    return new CheckResult(false,
+                            "Search is not working");
+                })),
+
+        new TestCase<TestClue>()
+            .setInput(
+                "add\n" +
+                    "organization\n" +
+                    "Pizza Shop\n" +
+                    "Wall St. 1\n" +
+                    "+0 (123) 456-789-9999\n" +
+                "add\n" +
+                    "person\n" +
+                    "John\n" +
+                    "Smith\n" +
+                    "\n" +
+                    "\n" +
+                    "123 456 789\n" +
+                "add\n" +
+                    "organization\n" +
+                    "PizzaNuts\n" +
+                    "Wall St. 6\n" +
+                    "+0 (123) 456-781-9999\n" +
+                "search\n" +
+                    "789\n" +
+                "1\n" +
+                "menu\n" +
+                "exit")
+            .setAttach(new TestClue(output -> {
+                String[] blocks = output.strip().split("(\\s*\\n\\s*){2,}");
+                var feedback = splitActionsFeedback(blocks.length, 4);
+                if (feedback != null) return feedback;
+
+                for (String infoBlock : blocks) {
+                    if (infoBlock.contains("Pizza Shop")
+                            && infoBlock.contains("John Smith")
+                            && !infoBlock.contains("PizzaNuts")) {
+                        return CheckResult.correct();
+
+                    } else if (infoBlock.contains("+0 (123) 456-789-9999")
+                            && infoBlock.contains("123 456 789")
+                            && !infoBlock.contains("+0 (123) 456-781-9999")) {
+                        return CheckResult.correct();
+                    }
+                }
+                return new CheckResult(false,
+                        "Search by phone number is not working");
+            }))
         );
     }
 

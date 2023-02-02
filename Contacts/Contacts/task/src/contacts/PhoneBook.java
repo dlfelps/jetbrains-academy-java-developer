@@ -17,7 +17,7 @@ public class PhoneBook {
 
     public boolean list(){
         for (int i=0; i<contacts.size();i++){
-            System.out.printf("%d. %s%n",i+1, contacts.get(i).toString());
+            System.out.printf("%d. %s",i+1, contacts.get(i).shortName());
         }
         return true;
     }
@@ -30,21 +30,37 @@ public class PhoneBook {
             System.out.print("Select a record:");
             Scanner s = new Scanner(System.in);
             var id = s.nextInt();
-            System.out.print("Select a field:");
-            var field = s.next();
-            System.out.printf("Enter %s:", field);
-            Scanner s2 = new Scanner(System.in);
-            String newInput = s2.nextLine();
 
-            var currentContact = contacts.get(id-1);
-            var newContact = switch(field){
-                case "name" -> currentContact.withFirst(newInput);
-                case "surname" -> currentContact.withLast(newInput);
-                default -> currentContact.withNumber(newInput);
-            };
 
-            contacts.set(id-1, newContact); // input is 1-based indexing
-            System.out.println("The record updated!");
+            var currentContact = contacts.get(id-1); //gets reference to current id
+            if (currentContact instanceof Person p) {
+                System.out.print("Select a field (name, surname, birth, gender, number): ");
+                var field = s.next();
+                System.out.printf("Enter %s:", field);
+                Scanner s2 = new Scanner(System.in);
+                String newInput = s2.nextLine();
+
+                switch(field){
+                    case "name" -> p.editFirst(newInput);
+                    case "surname" -> p.editLast(newInput);
+                    case "birth" -> p.editDob(newInput);
+                    case "gender" -> p.editGender(newInput);
+                    default -> p.editNumber(newInput);
+                };
+            } else if (currentContact instanceof Organization o) {
+                System.out.print("Select a field (address, number): ");
+                var field = s.next();
+                System.out.printf("Enter %s:", field);
+                Scanner s2 = new Scanner(System.in);
+                String newInput = s2.nextLine();
+
+                switch(field){
+                    case "address" -> o.editAddress(newInput);
+                    default -> o.editNumber(newInput);
+                };
+            }
+
+            System.out.printf("The record updated!%n%n");
 
         }
         return true;
@@ -53,18 +69,14 @@ public class PhoneBook {
     private boolean add(){
         Scanner s = new Scanner(System.in);
 
-        System.out.printf("%nEnter the name:");
-        String first = s.next();
+        System.out.print("Enter the type (person, organization): ");
+        String type = s.next();
 
-        System.out.printf("%nEnter the surname:");
-        String last = s.next();
-
-        System.out.println("Enter the number:");
-        Scanner s2 = new Scanner(System.in);
-        String number = s2.nextLine();
-        var optionalPhoneNumber = PhoneNumber.tryFrom(number);
-        contacts.add(new Contact(first, last, optionalPhoneNumber));
-        System.out.println("The record added.");
+        switch (type){
+            case "person" -> contacts.add(Person.getInput());
+            default -> contacts.add(Organization.getInput());
+        }
+        System.out.printf("The record added.%n");
         return true;
     }
 
@@ -85,7 +97,7 @@ public class PhoneBook {
     }
 
     public boolean menu(){
-        System.out.print("Enter action (add, remove, edit, count, list, exit):");
+        System.out.print("Enter action (add, remove, edit, count, info, exit): ");
         Scanner s = new Scanner(System.in);
         String action = s.next();
         return switch(action){
@@ -93,12 +105,21 @@ public class PhoneBook {
             case "remove" -> remove();
             case "edit" -> edit();
             case "count" -> count();
-            case "list" -> list();
+            case "info" -> info();
             default -> false;
         };
     }
 
+    private boolean info() {
+        list();
+        Scanner s = new Scanner(System.in);
 
+        System.out.printf("%nSelect a record: ");
+        var id = s.nextInt();
+
+        System.out.print(contacts.get(id-1));
+        return true;
+    }
 
 
 }
