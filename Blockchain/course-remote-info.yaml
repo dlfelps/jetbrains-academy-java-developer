@@ -1,21 +1,27 @@
 hyperskill_project:
-  id: 43
-  ide_files: https://stepik.org/media/attachments/lesson/204791/additional_files.json
+  id: 50
+  ide_files: https://stepik.org/media/attachments/lesson/209941/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Thu, 02 Feb 2023 19:49:49 UTC"
+update_date: "Thu, 02 Feb 2023 19:53:37 UTC"
 stages:
-- id: 228
-  step: 5324
+- id: 271
+  step: 5413
   is_completed: true
-- id: 229
-  step: 5325
+- id: 272
+  step: 5414
   is_completed: true
-- id: 230
-  step: 5326
-  is_completed: true
-- id: 231
-  step: 5327
+- id: 273
+  step: 5415
+  is_completed: false
+- id: 274
+  step: 5416
+  is_completed: false
+- id: 275
+  step: 5417
+  is_completed: false
+- id: 276
+  step: 5418
   is_completed: false
 topics:
   0:
@@ -123,6 +129,8 @@ topics:
     theory_id: 3621
   - title: Hierarchy of exceptions
     theory_id: 3570
+  - title: Exception handling
+    theory_id: 3552
   - title: Command line overview
     theory_id: 8977
   - title: Parameters and Options
@@ -143,22 +151,36 @@ topics:
     theory_id: 5504
   - title: IntelliJ IDEA
     theory_id: 3801
-  - title: IntelliJ IDEA run configurations
-    theory_id: 10630
-  - title: IntelliJ IDEA basics
-    theory_id: 5819
-  - title: EduTools
-    theory_id: 5839
   - title: Introduction to logging
     theory_id: 5538
   - title: Debugging techniques
     theory_id: 13775
+  - title: LocalDate
+    theory_id: 3592
+  - title: LocalTime
+    theory_id: 3593
+  - title: LocalDateTime
+    theory_id: 3617
   - title: Introduction to generic programming
     theory_id: 3492
+  - title: Generics and Object
+    theory_id: 3493
   - title: What are collections
     theory_id: 3770
+  - title: The Collections Framework overview
+    theory_id: 3624
   - title: ArrayList
     theory_id: 3567
+  - title: The List interface
+    theory_id: 3581
+  - title: Instant
+    theory_id: 21233
+  - title: "Hashing: overview"
+    theory_id: 9831
+  - title: Hash function
+    theory_id: 10878
+  - title: Hash table
+    theory_id: 13054
   - title: Defining classes
     theory_id: 3618
   - title: Constructor
@@ -171,6 +193,12 @@ topics:
     theory_id: 3599
   - title: Inheritance
     theory_id: 3583
+  - title: Protected modifier
+    theory_id: 6692
+  - title: Referencing subclass objects
+    theory_id: 3585
+  - title: The Object class
+    theory_id: 3596
   - title: Multiple constructors
     theory_id: 3538
   - title: The keyword super
@@ -183,107 +211,37 @@ topics:
     theory_id: 3622
   - title: Hiding and overriding
     theory_id: 3572
-  - title: Enums in Java
-    theory_id: 11514
-  - title: Fields and methods in enum
-    theory_id: 11523
-  - title: Boxing and unboxing
-    theory_id: 3595
-  1:
-  - title: The concept of patterns
-    theory_id: 3611
-  - title: Introduction to software architecture
-    theory_id: 15368
-  - title: Regexps basics
-    theory_id: 7580
-  - title: Regexps in Java
-    theory_id: 3670
-  - title: "Sets, ranges, alternations"
-    theory_id: 3674
-  - title: Quantifiers
-    theory_id: 3687
-  - title: Shorthands
-    theory_id: 3680
-  - title: Regexes in programs
-    theory_id: 3696
-  - title: Patterns and Matcher
-    theory_id: 3712
-  - title: Match results
-    theory_id: 3716
-  - title: Introduction to creational patterns
-    theory_id: 16251
-  - title: Builder pattern
-    theory_id: 16735
-  - title: Builder
-    theory_id: 5130
-  - title: Protected modifier
-    theory_id: 6692
-  - title: Referencing subclass objects
-    theory_id: 3585
   - title: Polymorphism
     theory_id: 3587
   - title: Interface
     theory_id: 3615
-  2:
-  - title: Reflection basics
-    theory_id: 3609
-  - title: Design principles
-    theory_id: 8956
-  - title: Single Responsibility Principle
-    theory_id: 8963
-  - title: Class Diagrams
-    theory_id: 15588
-  - title: LocalDate
-    theory_id: 3592
-  - title: LocalTime
-    theory_id: 3593
-  - title: LocalDateTime
-    theory_id: 3617
-  - title: Generics and Object
-    theory_id: 3493
-  - title: The Collections Framework overview
-    theory_id: 3624
-  - title: The List interface
-    theory_id: 3581
-  - title: The Set interface
-    theory_id: 3575
-  - title: Enumset
-    theory_id: 19793
-  - title: Encapsulating object creation
-    theory_id: 3577
-  - title: Command
-    theory_id: 7762
-  - title: Template method
-    theory_id: 5155
-  - title: Factory Method and Prototype
-    theory_id: 16430
-  - title: Factory method
-    theory_id: 5761
-  - title: Abstract factory
-    theory_id: 17108
-  - title: Abstract factory
-    theory_id: 5732
-  - title: The Object class
-    theory_id: 3596
-  - title: Abstract class
-    theory_id: 3597
-  - title: Abstract class vs interface
-    theory_id: 3563
-  - title: Runtime type checking
-    theory_id: 3571
-  3:
-  - title: Exception handling
-    theory_id: 3552
+  - title: Boxing and unboxing
+    theory_id: 3595
+  - title: Comparable
+    theory_id: 14456
+  1:
+  - title: The concept of patterns
+    theory_id: 3611
   - title: Files
     theory_id: 3635
   - title: Reading files
     theory_id: 3636
-  - title: Command-line arguments
-    theory_id: 3566
+  - title: Managing files
+    theory_id: 3648
+  - title: Multidimensional array
+    theory_id: 1933
+  - title: Stack
+    theory_id: 5252
   - title: Formatted output
     theory_id: 7046
   - title: Writing files
     theory_id: 3652
+  - title: Processing strings
+    theory_id: 3551
+  - title: Queue
+    theory_id: 20716
+  - title: Deque
+    theory_id: 18635
   - title: What are streams
     theory_id: 5533
   - title: Input streams
@@ -294,3 +252,126 @@ topics:
     theory_id: 8147
   - title: Custom serialization
     theory_id: 3616
+  - title: Introduction to software architecture
+    theory_id: 15368
+  - title: Design principles
+    theory_id: 8956
+  - title: Single Responsibility Principle
+    theory_id: 8963
+  - title: Class Diagrams
+    theory_id: 15588
+  - title: Generic methods
+    theory_id: 3606
+  - title: Type Bounds
+    theory_id: 8216
+  - title: Encapsulating object creation
+    theory_id: 3577
+  - title: Template method
+    theory_id: 5155
+  - title: Stack
+    theory_id: 20203
+  - title: Introduction to creational patterns
+    theory_id: 16251
+  - title: Memento
+    theory_id: 16528
+  - title: Factory Method and Prototype
+    theory_id: 16430
+  - title: Factory method
+    theory_id: 5761
+  - title: Abstract factory
+    theory_id: 17108
+  - title: Abstract factory
+    theory_id: 5732
+  - title: Abstract class
+    theory_id: 3597
+  - title: Abstract class vs interface
+    theory_id: 3563
+  - title: Inner classes
+    theory_id: 11505
+  - title: Nested classes
+    theory_id: 11845
+  2:
+  - title: "Synchronous, asynchronous, parallel"
+    theory_id: 9332
+  - title: Processes and threads
+    theory_id: 9420
+  - title: Lambda expressions
+    theory_id: 11635
+  - title: Method references
+    theory_id: 3620
+  - title: Functional interfaces
+    theory_id: 11636
+  - title: Threads as objects
+    theory_id: 4875
+  - title: Custom threads
+    theory_id: 4876
+  - title: Thread management
+    theory_id: 3619
+  - title: Exceptions in threads
+    theory_id: 4882
+  - title: Shared data
+    theory_id: 3610
+  - title: Thread synchronization
+    theory_id: 3557
+  - title: Executors
+    theory_id: 4895
+  - title: ThreadLocal
+    theory_id: 23984
+  - title: Command
+    theory_id: 7762
+  - title: Singleton
+    theory_id: 3555
+  - title: Anonymous classes
+    theory_id: 11896
+  - title: Default methods
+    theory_id: 11354
+  3:
+  - title: Ordering and total order
+    theory_id: 9253
+  - title: Standard functional interfaces
+    theory_id: 3623
+  - title: Optional
+    theory_id: 9699
+  - title: The Set interface
+    theory_id: 3575
+  - title: Function composition
+    theory_id: 3580
+  - title: Comparator
+    theory_id: 12966
+  - title: Functional data processing with streams
+    theory_id: 3582
+  - title: Stream filtering
+    theory_id: 3578
+  - title: Map and flatMap
+    theory_id: 3568
+  - title: Reduction methods
+    theory_id: 3569
+  - title: Collectors
+    theory_id: 3613
+  - title: Infinite streams
+    theory_id: 10180
+  - title: Taking elements
+    theory_id: 8413
+  - title: Streams of primitives
+    theory_id: 8407
+  - title: Stream pipelines
+    theory_id: 3612
+  - title: Parallel streams
+    theory_id: 8419
+  - title: The Map interface
+    theory_id: 3558
+  - title: Grouping collectors
+    theory_id: 10512
+  - title: Structural design patterns
+    theory_id: 17649
+  - title: Decorator pattern
+    theory_id: 18644
+  - title: Decorator
+    theory_id: 5216
+  - title: Facade pattern
+    theory_id: 19222
+  - title: Facade
+    theory_id: 5527
+  4:
+  - title: Currying
+    theory_id: 3579
