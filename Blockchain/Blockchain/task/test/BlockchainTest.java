@@ -4,6 +4,7 @@ import org.hyperskill.hstest.testcase.TestCase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,8 @@ class Block {
     String hash;
 
     static ArrayList<String> minerIds;
+    static ArrayList<String> dataStrs;
+
 
     static Block parseBlock(String strBlock) throws BlockParseException {
         if (strBlock.length() == 0) {
@@ -44,9 +47,9 @@ class Block {
                 .filter(e -> e.length() > 0)
                 .collect(Collectors.toList());
 
-        if (lines.size() != 11) {
+        if (lines.size() < 12) {
             throw new BlockParseException("Every block should " +
-                    "contain 11 lines of data");
+                    "contain at least 12 lines of data");
         }
 
         if (!lines.get(0).equals("Block:")) {
@@ -121,11 +124,6 @@ class Block {
                     "should be \"Hash of the block:\"");
         }
 
-        if (!lines.get(10).toUpperCase().startsWith("N ")) {
-            throw new BlockParseException("11-th line of every block " +
-                    "should be state what happened to N");
-        }
-
         String prevhash = lines.get(6).strip();
         String hash = lines.get(8).strip();
 
@@ -139,12 +137,43 @@ class Block {
         block.hash = hash;
         block.hashprev = prevhash;
 
+        if (!lines.get(9).startsWith("Block data:")) {
+            throw new BlockParseException("10-th line of every block " +
+                    "should start with \"Block data:\"");
+        }
+
+        int i;
+        StringBuilder dataStr = new StringBuilder(lines.get(9));
+        for (i=10; i < lines.size(); i++){
+            if (lines.get(i).toLowerCase().contains("block") && lines.get(i).toLowerCase().contains("generating")){
+                break;
+            }
+            dataStr.append(lines.get(i));
+        }
+        dataStrs.add(dataStr.toString());
+
+        if (!lines.get(i).toLowerCase().contains("block") && !lines.get(i).toLowerCase().contains("generating")){
+            throw new BlockParseException("Second-last line of every block " +
+                    "should say how long the block was generating for! (Use the example's format)");
+        }
+
+        if (i + 1 >= lines.size()){
+            throw new BlockParseException("There should be two lines after the block data.. " +
+                    "one for generating time and one for N's status update.");
+        }
+
+        if (!lines.get(i+1).toUpperCase().startsWith("N ")) {
+            throw new BlockParseException("11-th line of every block " +
+                    "should be state what happened to N in the format given.");
+        }
+
         return block;
     }
 
 
     static List<Block> parseBlocks(String output) throws BlockParseException {
         minerIds = new ArrayList<String>();
+        dataStrs = new ArrayList<String>();
 
         String[] strBlocks = output.split("\n\n");
 
@@ -161,6 +190,12 @@ class Block {
         minerIds.removeIf(s -> Objects.equals(s, firstMiner));
         if (minerIds.size() == 0){
             throw new BlockParseException("All blocks are mined by a single miner!");
+        }
+
+        String firstData = dataStrs.get(0);
+        dataStrs.removeIf(s -> Objects.equals(s, firstData));
+        if (dataStrs.size() == 0){
+            throw new BlockParseException("All blocks contain the same data!");
         }
 
         return blocks;

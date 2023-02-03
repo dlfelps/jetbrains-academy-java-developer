@@ -15,7 +15,7 @@ public class Mine {
     private static final int POOL_SIZE = 4;
     private Block result;
 
-    record Miner(Block previousBlock, long numZeros) implements Callable<Block> {
+    record Miner(Block previousBlock, long numZeros, long minerId) implements Callable<Block> {
 
         @Override
         public Block call() throws Exception {
@@ -28,7 +28,7 @@ public class Mine {
             var computeTime = i1.until(i2, ChronoUnit.SECONDS);
             String currentHash = Block.getHash(id, timestamp, magic, previousHash);
 
-            return new Block(id, timestamp, magic, computeTime, previousHash, currentHash);
+            return new Block(id, timestamp, magic, computeTime, minerId, previousHash, currentHash);
         }
     }
 
@@ -37,10 +37,10 @@ public class Mine {
 
         List<Callable<Block>> tasks = new ArrayList<Callable<Block>>();
 
-        tasks.add(new Miner(previousBlock, numZeros));
-        tasks.add(new Miner(previousBlock, numZeros));
-        tasks.add(new Miner(previousBlock, numZeros));
-        tasks.add(new Miner(previousBlock, numZeros));
+        tasks.add(new Miner(previousBlock, numZeros, 1));
+        tasks.add(new Miner(previousBlock, numZeros, 2));
+        tasks.add(new Miner(previousBlock, numZeros, 3));
+        tasks.add(new Miner(previousBlock, numZeros, 4));
 
 
         try {
