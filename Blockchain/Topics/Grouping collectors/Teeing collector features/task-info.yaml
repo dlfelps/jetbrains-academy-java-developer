@@ -1,0 +1,23 @@
+type: choice
+is_multiple_choice: true
+options:
+- text: It takes two downstream collectors and a merger function.
+- text: It is available since Java 9
+- text: It is available since Java 12
+- text: It can take an arbitrary number of downstream collectors.
+files:
+- name: src/Task.java
+  visible: true
+  text: |
+    // You can experiment here, it won’t be checked
+
+    public class Task {
+      public static void main(String[] args) {
+        // put your code here
+      }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/15109#comment
+status: Unchecked
+record: -1
+local_check: false

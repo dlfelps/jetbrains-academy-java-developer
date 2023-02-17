@@ -28,7 +28,7 @@ public class Mine {
             var computeTime = i1.until(i2, ChronoUnit.SECONDS);
             String currentHash = Block.getHash(id, timestamp, magic, previousHash);
 
-            return new Block(id, timestamp, magic, computeTime, minerId, previousHash, currentHash);
+            return new Block(id, timestamp, magic, computeTime, minerId, previousHash, currentHash, "this is a test");
         }
     }
 

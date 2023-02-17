@@ -1,0 +1,6 @@
+<h2>Grouping numbers</h2>
+<html><body><p>Given a stream with the <code class="language-java">groupingBy</code> collector.</p>
+<pre><code class="language-java">??? numbers = Stream.of(1, 2, 1, 3, 2, 4).collect(Collectors.groupingBy(Function.identity()));</code></pre>
+<p>The <code class="language-java">identity</code> function is equal to <code class="language-java">x -&gt; x</code>.</p>
+<p>The result is a <code class="language-java">Map</code>. What elements does the map contain?</p>
+<p></p><div class="alert alert-primary">Note, <code class="language-java">{}</code> is the brackets for a map, <code class="language-java">[]</code> is the brackets for a list.</div><p></p></body></html>

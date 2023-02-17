@@ -5,13 +5,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Random;
 
-record Block(long id, long timestamp, long magic, long computeTime, long minerId, String previousHash, String currentHash) {
+record Block(long id,
+             long timestamp,
+             long magic,
+             long computeTime,
+             long minerId,
+             String previousHash,
+             String currentHash,
+             String blockData) {
 
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("Block: " + System.lineSeparator());
-        sb.append("Created by miner # " + minerId + System.lineSeparator());
+        sb.append("Created by: miner" + minerId + System.lineSeparator());
+        sb.append("miner" + minerId + " gets 100 VC" + System.lineSeparator());
         sb.append("Id: " + id + System.lineSeparator());
         sb.append("Timestamp: " + timestamp + System.lineSeparator());
         sb.append("Magic number: "+ magic + System.lineSeparator());
@@ -19,6 +27,8 @@ record Block(long id, long timestamp, long magic, long computeTime, long minerId
         sb.append(previousHash + System.lineSeparator());
         sb.append("Hash of the block: " + System.lineSeparator());
         sb.append(currentHash + System.lineSeparator());
+        sb.append("Block data: " + System.lineSeparator());
+        sb.append(blockData + System.lineSeparator());
         sb.append("Block was generating for " + computeTime + " seconds" + System.lineSeparator());
         return sb.toString();
     }
@@ -54,7 +64,7 @@ record Block(long id, long timestamp, long magic, long computeTime, long minerId
         var computeTime = i1.until(i2, ChronoUnit.SECONDS);
         String currentHash = getHash(id, timestamp, magic, previousHash);
 
-        return new Block(id, timestamp, magic, computeTime, 0, previousHash, currentHash);
+        return new Block(id, timestamp, magic, computeTime, 0, previousHash, currentHash, "no data");
     }
 
     public static String getHash(long id, long timestamp, long magic, String previousHash) {

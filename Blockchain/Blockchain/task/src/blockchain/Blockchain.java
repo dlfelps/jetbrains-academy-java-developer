@@ -13,11 +13,12 @@ public class Blockchain {
     }
 
     private void balanceDemand(){
-        var lastTime = ledger.get(ledger.size()-1).computeTime();
-        if (lastTime<10){
+//        var lastTime = ledger.get(ledger.size()-1).computeTime();
+        long lastTime = 1;
+        if (lastTime<1){
             numZeros = numZeros+1;
             System.out.printf("N was increased to %d%n", numZeros);
-        } else if (lastTime > 100){
+        } else if (lastTime > 5){
             numZeros = numZeros-1;
             System.out.printf("N was decreased to %d%n", numZeros);
         } else {

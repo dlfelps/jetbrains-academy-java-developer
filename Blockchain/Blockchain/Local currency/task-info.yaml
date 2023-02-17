@@ -278,6 +278,240 @@ files:
         }
     }
   learner_created: false
+- name: src/blockchain/StringUtil.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.security.MessageDigest;
+
+    public class StringUtil {
+        /* Applies Sha256 to a string and returns a hash. */
+        public static String applySha256(String input){
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                /* Applies sha256 to our input */
+                byte[] hash = digest.digest(input.getBytes("UTF-8"));
+                StringBuilder hexString = new StringBuilder();
+                for (byte elem: hash) {
+                    String hex = Integer.toHexString(0xff & elem);
+                    if(hex.length() == 1) hexString.append('0');
+                    hexString.append(hex);
+                }
+                return hexString.toString();
+            }
+            catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+  learner_created: true
+- name: src/blockchain/Mine.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.time.Instant;
+    import java.time.temporal.ChronoUnit;
+    import java.util.ArrayList;
+    import java.util.Date;
+    import java.util.List;
+    import java.util.concurrent.Callable;
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.Future;
+
+    public class Mine {
+
+        private static final int POOL_SIZE = 4;
+        private Block result;
+
+        record Miner(Block previousBlock, long numZeros, long minerId) implements Callable<Block> {
+
+            @Override
+            public Block call() throws Exception {
+                long id = previousBlock.id() + 1;
+                long timestamp = new Date().getTime();
+                String previousHash = previousBlock.currentHash();
+                var i1 = Instant.now();
+                long magic = Block.findMagicNumber(id, timestamp, previousHash, numZeros);
+                var i2 = Instant.now();
+                var computeTime = i1.until(i2, ChronoUnit.SECONDS);
+                String currentHash = Block.getHash(id, timestamp, magic, previousHash);
+
+                return new Block(id, timestamp, magic, computeTime, minerId, previousHash, currentHash, "this is a test");
+            }
+        }
+
+        public Mine(Block previousBlock, long numZeros){
+            ExecutorService executorService = Executors.newFixedThreadPool(POOL_SIZE);
+
+            List<Callable<Block>> tasks = new ArrayList<Callable<Block>>();
+
+            tasks.add(new Miner(previousBlock, numZeros, 1));
+            tasks.add(new Miner(previousBlock, numZeros, 2));
+            tasks.add(new Miner(previousBlock, numZeros, 3));
+            tasks.add(new Miner(previousBlock, numZeros, 4));
+
+
+            try {
+                this.result = executorService.invokeAny(tasks);
+                executorService.shutdownNow();
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+        public Block getResult(){
+            return result;
+        }
+    }
+  learner_created: true
+- name: src/blockchain/Blockchain.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.util.ArrayList;
+
+    public class Blockchain {
+        ArrayList<Block> ledger;
+        private long numZeros;
+
+        public Blockchain(){
+            this.numZeros = 0; // initialize set to 0
+            ledger = new ArrayList<>();
+            ledger.add(Block.getFirstBlock(numZeros));
+        }
+
+        private void balanceDemand(){
+            var lastTime = ledger.get(ledger.size()-1).computeTime();
+            if (lastTime<1){
+                numZeros = numZeros+1;
+                System.out.printf("N was increased to %d%n", numZeros);
+            } else if (lastTime > 10){
+                numZeros = numZeros-1;
+                System.out.printf("N was decreased to %d%n", numZeros);
+            } else {
+                System.out.printf("N stays the same%n");
+            }
+        }
+
+
+        @Override
+        public String toString(){
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i< ledger.size(); i++){
+                sb.append(ledger.get(i).toString() + System.lineSeparator());
+            }
+            return sb.toString();
+        }
+
+        public void mine(long numBlocks){
+            Mine m;
+            Block newBlock = ledger.get(ledger.size()-1);
+
+            //print first block
+            System.out.print(newBlock);
+            balanceDemand();
+            System.out.println();
+
+            //find remaining blocks
+            for (int i=1; i<numBlocks; i++){
+                m = new Mine(newBlock, numZeros);
+                newBlock = m.getResult();
+                ledger.add(newBlock);
+
+                System.out.print(newBlock);
+                balanceDemand();
+                System.out.println();
+            }
+
+        }
+
+
+    }
+  learner_created: true
+- name: src/blockchain/Block.java
+  visible: true
+  text: |
+    package blockchain;
+
+    import java.time.Instant;
+    import java.time.temporal.ChronoUnit;
+    import java.util.Date;
+    import java.util.Random;
+
+    record Block(long id,
+                 long timestamp,
+                 long magic,
+                 long computeTime,
+                 long minerId,
+                 String previousHash,
+                 String currentHash,
+                 String blockData) {
+
+        @Override
+        public String toString(){
+            StringBuilder sb = new StringBuilder();
+            sb.append("Block: " + System.lineSeparator());
+            sb.append("Created by miner # " + minerId + System.lineSeparator());
+            sb.append("Id: " + id + System.lineSeparator());
+            sb.append("Timestamp: " + timestamp + System.lineSeparator());
+            sb.append("Magic number: "+ magic + System.lineSeparator());
+            sb.append("Hash of the previous block: " + System.lineSeparator());
+            sb.append(previousHash + System.lineSeparator());
+            sb.append("Hash of the block: " + System.lineSeparator());
+            sb.append(currentHash + System.lineSeparator());
+            sb.append("Block data: " + System.lineSeparator());
+            sb.append(blockData + System.lineSeparator());
+            sb.append("Block was generating for " + computeTime + " seconds" + System.lineSeparator());
+            return sb.toString();
+        }
+
+
+        public static long findMagicNumber(long id, long timestamp, String previousHash, long numZeros) {
+            Random rd = new Random();
+            long magic = rd.nextLong();
+            boolean notProved = true;
+            Thread ct = Thread.currentThread();
+            while (notProved){
+                magic = rd.nextLong();
+                if (ct.isInterrupted()){
+                    notProved = false;
+                } else {
+                    notProved = !isProved(getHash(id, timestamp, magic, previousHash), numZeros);
+                }
+            }
+            return magic;
+        }
+
+        public static boolean isProved(String currentHash, long numZeros){
+            return currentHash.substring(0, (int) numZeros).chars().allMatch(c -> c == 48); // 48 is '0'
+        }
+
+        public static Block getFirstBlock(long numZeros){
+            long id = 1;
+            long timestamp = new Date().getTime();
+            String previousHash = "0";
+            var i1 = Instant.now();
+            long magic = findMagicNumber(id, timestamp, previousHash, numZeros);
+            var i2 = Instant.now();
+            var computeTime = i1.until(i2, ChronoUnit.SECONDS);
+            String currentHash = getHash(id, timestamp, magic, previousHash);
+
+            return new Block(id, timestamp, magic, computeTime, 0, previousHash, currentHash, "no data");
+        }
+
+        public static String getHash(long id, long timestamp, long magic, String previousHash) {
+            return StringUtil.applySha256(String.valueOf(id) + String.valueOf(timestamp) + String.valueOf(magic) + previousHash);
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5418#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
+    Academy</a> to continue learning.
+  time: "Fri, 17 Feb 2023 18:38:09 UTC"
 record: -1

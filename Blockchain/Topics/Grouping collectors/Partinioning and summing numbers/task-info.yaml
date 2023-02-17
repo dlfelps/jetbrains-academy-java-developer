@@ -1,0 +1,24 @@
+type: choice
+is_multiple_choice: false
+options:
+- text: "map.get(false) returns 16, map.get(true) returns -7"
+- text: "map.get(false) returns 16, map.get(true) returns 16"
+- text: "map.get(false) returns -7, map.get(true) returns 16"
+- text: "map.get(false) returns 2, map.get(true) returns 4"
+- text: "map.get(false) returns 4, map.get(true) returns 2"
+files:
+- name: src/Task.java
+  visible: true
+  text: |
+    // You can experiment here, it won’t be checked
+
+    public class Task {
+      public static void main(String[] args) {
+        // put your code here
+      }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/2454#comment
+status: Solved
+record: -1
+local_check: false

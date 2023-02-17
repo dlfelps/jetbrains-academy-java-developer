@@ -1,0 +1,7 @@
+<h2>Partinioning and summing numbers</h2>
+<p>Here is a stream with the main collector and a downstream collector:</p>
+
+<pre><code class="language-java">Map&lt;Boolean, Long&gt; map = Stream.of(5, 1, 9, -2, -5, 1)
+        .collect(Collectors.partitioningBy(n -&gt; n &gt; 0, Collectors.summingLong(x -&gt; x)));</code></pre>
+
+<p>Select one correct statement after executing this code.</p>
